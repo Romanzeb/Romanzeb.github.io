@@ -229,20 +229,22 @@
   const posts = [
   {
   id: "MITM",
-  title: "Görünmeyen Üçüncü Kişi Man-in-the-Middle (MITM) Saldırıları",
+  title: "Aradaki Adam: MITM Saldırıları",
   date: "13 Ocak 2026",
-  excerpt: "MITM saldırılarının gerçekleşme kriterleri, saldırı türleri ve alınabilecek önlemler üzerine bir inceleme.",
+  excerpt: "MITM saldırılarının gerçekleşme kriterleri, saldırı türleri, tespit yöntemleri ve alınabilecek önlemler üzerine bir inceleme.",
   body: `
     <img src="images/MITM.png" alt="MITM saldırı diyagramı" style="width:100%; background:#ffffff; padding:24px; border-radius:12px; margin:0 0 20px; display:block;">
+
     <h2>1. Giriş</h2>
     <p>Man-in-the-Middle (MITM) saldırıları, saldırganın iki taraf arasındaki iletişime gizlice dahil olarak veri dinlemesi, değiştirmesi veya yönlendirmesi esasına dayanan siber saldırı türleridir. Bu saldırılar genellikle ağ güvenliğindeki zayıflıklardan, yanlış yapılandırmalardan ve kullanıcı farkındalığı eksikliğinden faydalanılarak gerçekleştirilir.</p>
-    <p>Bu bölümde MITM saldırılarının hangi kriterlere göre yapıldığı, kullanılan yöntemler ve gerçekçi saldırı senaryoları ele alınmıştır.</p>
+    <p>Bu bölümde MITM saldırılarının hangi kriterlere göre yapıldığı, kullanılan yöntemler, gerçekçi saldırı senaryoları ve SOC tarafında bu saldırıların nasıl tespit edilebileceği ele alınmıştır.</p>
 
     <h2>2. MITM Saldırılarının Gerçekleşme Kriterleri</h2>
 
     <h3>2.1 Ağ Konumuna Göre (Network Position)</h3>
     <p>MITM saldırılarının en temel gereksinimi, saldırganın hedef ile iletişim kurulan ağ arasında yer alabilmesidir. Bu durum genellikle aynı yerel ağda (LAN) bulunan sistemlerde görülür.</p>
     <p><strong>Örnek Senaryo:</strong> Bir yurt veya kafe ortamında kullanıcı ve saldırgan aynı Wi-Fi ağına bağlıdır. Saldırgan ARP Spoofing yöntemi ile kendisini gateway gibi göstererek trafiği kendi üzerinden geçirir.</p>
+    <p><strong>Evil Twin / Sahte Erişim Noktası (Rogue AP):</strong> Saldırganın aynı ağa sızmasına dahi gerek kalmayabilir. Meşru bir Wi-Fi ağının SSID'sini (örneğin "Kafe_WiFi") birebir taklit eden sahte bir erişim noktası kurarak kullanıcıların bilmeden kendi cihazına bağlanmasını sağlayabilir. Bu durumda tüm trafik doğrudan saldırganın kontrolünden geçer, ayrıca ARP Spoofing gibi ek bir tekniğe gerek kalmaz.</p>
 
     <h3>2.2 Kullanılan Protokole Göre</h3>
     <p>Kullanılan ağ protokolünün şifreli olup olmaması MITM saldırısının başarısını doğrudan etkiler.</p>
@@ -257,7 +259,7 @@
     <p><strong>Şifreli Ancak Zayıf Yapılandırılmış Protokoller:</strong></p>
     <ul>
       <li>HTTPS (SSL Stripping)</li>
-      <li>SSH (zayıf parola veya anahtar yönetimi)</li>
+      <li>SSH — asıl risk, host key doğrulamasının kullanıcı tarafından düşünmeden kabul edilmesinden kaynaklanır (ör. "are you sure you want to continue connecting?" uyarısının fark edilmeden geçilmesi). Zayıf parola veya anahtar yönetimi bu riski büyütür ama tek başına neden değildir.</li>
     </ul>
 
     <h3>2.3 Altyapı Servislerine Göre</h3>
@@ -268,6 +270,7 @@
       <li>DNS Spoofing</li>
       <li>DHCP Spoofing</li>
       <li>ICMP Redirect</li>
+      <li>LLMNR / NBT-NS Poisoning — özellikle Windows tabanlı kurumsal ortamlarda yaygın görülen, DNS çözümlemesi başarısız olduğunda devreye giren yerel isim çözümleme protokollerinin (LLMNR, NBT-NS) sahte yanıtlarla kötüye kullanılmasına dayanır. Responder gibi araçlarla kimlik bilgisi (hash) yakalamak için sıkça kullanılır.</li>
     </ul>
     <p><strong>Örnek:</strong> Saldırgan sahte bir DHCP sunucusu kurarak kullanıcılara yanlış gateway bilgisi dağıtır ve trafiği kendi sistemi üzerinden geçirir.</p>
 
@@ -287,6 +290,7 @@
     <ul>
       <li>ARP Poisoning</li>
       <li>DHCP Spoofing</li>
+      <li>DNS Spoofing / LLMNR-NBT-NS Poisoning</li>
     </ul>
 
     <h3>3.2 Taşıma Seviyesi MITM</h3>
@@ -299,22 +303,37 @@
     <ul>
       <li>Sahte giriş sayfaları</li>
       <li>HTTPS'den HTTP'ye düşürme (Downgrade Attack)</li>
+      <li>Evil Twin / Sahte Erişim Noktası</li>
     </ul>
 
     <h2>4. MITM Saldırı Senaryosu Örneği</h2>
     <p>Bir kullanıcı halka açık bir Wi-Fi ağı üzerinden HTTP protokolü kullanan bir web sitesine giriş yapar. Aynı ağda bulunan saldırgan ARP Spoofing yöntemiyle trafiği dinler ve kullanıcının oturum bilgilerini ele geçirir. Bu bilgiler kullanılarak kullanıcının hesabına yetkisiz erişim sağlanır.</p>
 
-    <h2>5. MITM Saldırılarına Karşı Önlemler</h2>
+    <h2>5. Tespit (Detection) Perspektifi</h2>
+    <p>MITM saldırıları önleme kadar tespit açısından da önemlidir. SOC tarafında dikkat edilmesi gereken bazı göstergeler şunlardır:</p>
+    <ul>
+      <li>Aynı IP adresine kısa sürede birden fazla farklı MAC adresi eşlenmesi (ARP tablosu anormallikleri)</li>
+      <li>Gateway MAC adresinde ani ve açıklanamayan değişiklikler</li>
+      <li>Ağda beklenmedik, yetkisiz DHCP sunucu yanıtları</li>
+      <li>Yoğun LLMNR/NBT-NS trafiği veya bilinen saldırı araçlarına ait imzalar (ör. Responder)</li>
+      <li>Sertifika uyuşmazlıkları veya beklenmedik self-signed sertifika kullanımı</li>
+      <li>Aynı ağda birden fazla SSID'nin aynı isimle yayın yapması (Evil Twin göstergesi)</li>
+    </ul>
+    <p>Bu tür göstergeler SIEM ve EDR çözümleri üzerinden korelasyon kurallarıyla izlenebilir ve erken aşamada tespit edilerek saldırının etkisi sınırlandırılabilir.</p>
+
+    <h2>6. MITM Saldırılarına Karşı Önlemler</h2>
     <ul>
       <li>HTTPS ve HSTS kullanımı</li>
       <li>VPN ile ağ trafiğinin şifrelenmesi</li>
-      <li>ARP ve DHCP koruma mekanizmaları</li>
-      <li>Sertifika doğrulama kontrolleri</li>
+      <li>ARP ve DHCP koruma mekanizmaları (Dynamic ARP Inspection, DHCP Snooping)</li>
+      <li>Sertifika doğrulama kontrolleri ve Certificate Pinning</li>
       <li>Güçlü parola ve anahtar politikaları</li>
+      <li>802.1X / Network Access Control (NAC) ile yetkisiz cihazların ağa erişiminin engellenmesi</li>
+      <li>DNSSEC kullanımı</li>
     </ul>
 
-    <h2>6. Sonuç</h2>
-    <p>MITM saldırıları, ağ güvenliği açısından ciddi riskler oluşturmaktadır. Özellikle şifreleme kullanılmayan veya yanlış yapılandırılmış protokoller ve altyapı servisleri bu saldırılara zemin hazırlamaktadır. Güvenli yapılandırmalar ve kullanıcı farkındalığı, MITM saldırılarına karşı en etkili savunma yöntemidir.</p>
+    <h2>7. Sonuç</h2>
+    <p>MITM saldırıları, ağ güvenliği açısından ciddi riskler oluşturmaktadır. Özellikle şifreleme kullanılmayan veya yanlış yapılandırılmış protokoller ve altyapı servisleri bu saldırılara zemin hazırlamaktadır. Güvenli yapılandırmalar, doğru tespit mekanizmaları ve kullanıcı farkındalığı, MITM saldırılarına karşı en etkili savunma yöntemidir.</p>
   `
 },
     {
