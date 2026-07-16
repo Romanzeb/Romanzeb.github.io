@@ -387,6 +387,7 @@
     meta:
         description = "Bash reverse shell pattern tespiti"
         author      = "Roman"
+        date        = "2026-07-16"
         mitre       = "T1059.004"
         severity    = "High"
     strings:
@@ -410,6 +411,7 @@
     meta:
         description = "Crontab dosyasinda kotu amacli icerik tespiti"
         author      = "Roman"
+        date        = "2026-07-16"
         mitre       = "T1053.003"
         severity    = "Medium-High"
     strings:
@@ -439,6 +441,7 @@ libc.execve(b"/bin/sh", [b"/bin/sh"], None)</code></pre>
     meta:
         description = "Native API / direkt syscall kullanimi tespiti"
         author      = "Roman"
+        date        = "2026-07-16"
         mitre       = "T1106"
         severity    = "High"
     strings:
@@ -464,6 +467,7 @@ libc.execve(b"/bin/sh", [b"/bin/sh"], None)</code></pre>
     meta:
         description = "Kotu amacli .so dosyasi / LD_PRELOAD tespiti"
         author      = "Roman"
+        date        = "2026-07-16"
         mitre       = "T1129"
         severity    = "High"
     strings:
@@ -490,6 +494,7 @@ libc.execve(b"/bin/sh", [b"/bin/sh"], None)</code></pre>
     meta:
         description = "Sahte uzantili kotu amacli script tespiti"
         author      = "Roman"
+        date        = "2026-07-16"
         mitre       = "T1204.002"
         severity    = "Medium-High"
     strings:
@@ -519,6 +524,7 @@ certutil -decode encoded.txt payload.exe</code></pre>
     meta:
         description = "certutil.exe LOLBin kotu amacli kullanim tespiti"
         author      = "Roman"
+        date        = "2026-07-16"
         mitre       = "T1140, T1105"
         severity    = "High"
     strings:
@@ -547,6 +553,7 @@ mshta.exe javascript:alert("Test");close()</code></pre>
     meta:
         description = "mshta.exe LOLBin / HTA kotu amacli kullanim tespiti"
         author      = "Roman"
+        date        = "2026-07-16"
         mitre       = "T1218.005"
         severity    = "High"
     strings:
@@ -574,6 +581,7 @@ mshta.exe javascript:alert("Test");close()</code></pre>
     meta:
         description = "regsvr32 Squiblydoo / SCT scriptlet tespiti"
         author      = "Roman"
+        date        = "2026-07-16"
         mitre       = "T1218.010"
         severity    = "High"
     strings:
