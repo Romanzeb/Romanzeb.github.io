@@ -142,6 +142,33 @@
     border-radius:4px;
     font-size:13.5px;
   }
+  .post-body img{
+  width:100%;
+  border-radius:8px;
+  margin:16px 0; 
+  display:block;
+}
+  .post-body h2{
+  font-size:20px;
+  font-weight:600;
+  margin:28px 0 10px;
+  color:var(--accent);
+}
+.post-body h2:first-child{margin-top:0;}
+.post-body h3{
+  font-size:16.5px;
+  font-weight:600;
+  margin:20px 0 8px;
+  color:var(--text);
+}
+.post-body ul{
+  margin:0 0 16px 20px;
+  color:var(--text);
+}
+.post-body li{
+  margin-bottom:6px;
+  font-size:16px;
+}
   .back-link{display:inline-block; margin-bottom:24px; font-size:14px;}
 
   @media (max-width:600px){
@@ -200,18 +227,95 @@
   // Her yazı için: id (url'de #id olarak görünür, boşluksuz), title, date, excerpt (listede görünen özet),
   // body (tam yazı, basit HTML kullanabilirsin: <p>, <pre><code>, <strong> vb.)
   const posts = [
-    {
-      id: "ilk-yazi",
-      title: "Merhaba",
-      date: "16 Temmuz 2026",
-      excerpt: "Bu blogu neden açtım ve burada ne tür şeyler paylaşacağım hakkında kısa bir giriş.",
-      body: `
-        <p>Bu blogu SOC analistliği sürecinde öğrendiğim şeyleri, çözdüğüm vakaları ve
-        üzerine düşündüğüm konuları not almak için açtım.</p>
-        <p>Zamanla buraya vaka incelemeleri, MITRE ATT&CK simülasyonları ve
-        sertifikasyon deneyimlerimle ilgili yazılar ekleyeceğim.</p>
-      `
-    },
+  {
+  id: "MITM",
+  title: "Man-in-the-Middle (MITM) Saldırıları",
+  date: "13 Ocak 2026",
+  excerpt: "MITM saldırılarının gerçekleşme kriterleri, saldırı türleri ve alınabilecek önlemler üzerine bir inceleme.",
+  body: `
+    <h2>1. Giriş</h2>
+    <p>Man-in-the-Middle (MITM) saldırıları, saldırganın iki taraf arasındaki iletişime gizlice dahil olarak veri dinlemesi, değiştirmesi veya yönlendirmesi esasına dayanan siber saldırı türleridir. Bu saldırılar genellikle ağ güvenliğindeki zayıflıklardan, yanlış yapılandırmalardan ve kullanıcı farkındalığı eksikliğinden faydalanılarak gerçekleştirilir.</p>
+    <p>Bu bölümde MITM saldırılarının hangi kriterlere göre yapıldığı, kullanılan yöntemler ve gerçekçi saldırı senaryoları ele alınmıştır.</p>
+
+    <h2>2. MITM Saldırılarının Gerçekleşme Kriterleri</h2>
+
+    <h3>2.1 Ağ Konumuna Göre (Network Position)</h3>
+    <p>MITM saldırılarının en temel gereksinimi, saldırganın hedef ile iletişim kurulan ağ arasında yer alabilmesidir. Bu durum genellikle aynı yerel ağda (LAN) bulunan sistemlerde görülür.</p>
+    <p><strong>Örnek Senaryo:</strong> Bir yurt veya kafe ortamında kullanıcı ve saldırgan aynı Wi-Fi ağına bağlıdır. Saldırgan ARP Spoofing yöntemi ile kendisini gateway gibi göstererek trafiği kendi üzerinden geçirir.</p>
+
+    <h3>2.2 Kullanılan Protokole Göre</h3>
+    <p>Kullanılan ağ protokolünün şifreli olup olmaması MITM saldırısının başarısını doğrudan etkiler.</p>
+    <p><strong>Şifrelenmemiş Protokoller:</strong></p>
+    <ul>
+      <li>HTTP</li>
+      <li>FTP</li>
+      <li>Telnet</li>
+      <li>POP3</li>
+    </ul>
+    <p>Bu protokollerde iletilen veriler açık metin olarak aktarıldığından saldırgan tarafından kolayca okunabilir.</p>
+    <p><strong>Şifreli Ancak Zayıf Yapılandırılmış Protokoller:</strong></p>
+    <ul>
+      <li>HTTPS (SSL Stripping)</li>
+      <li>SSH (zayıf parola veya anahtar yönetimi)</li>
+    </ul>
+
+    <h3>2.3 Altyapı Servislerine Göre</h3>
+    <p>MITM saldırıları yalnızca uygulama katmanında değil, ağ altyapısında çalışan servisler hedef alınarak da gerçekleştirilebilir.</p>
+    <p><strong>Yaygın Altyapı Tabanlı MITM Türleri:</strong></p>
+    <ul>
+      <li>ARP Spoofing</li>
+      <li>DNS Spoofing</li>
+      <li>DHCP Spoofing</li>
+      <li>ICMP Redirect</li>
+    </ul>
+    <p><strong>Örnek:</strong> Saldırgan sahte bir DHCP sunucusu kurarak kullanıcılara yanlış gateway bilgisi dağıtır ve trafiği kendi sistemi üzerinden geçirir.</p>
+
+    <h3>2.4 Kullanıcı Davranışlarına Göre</h3>
+    <p>MITM saldırılarının başarılı olmasında kullanıcı hataları önemli rol oynar.</p>
+    <p><strong>Riskli Davranışlar:</strong></p>
+    <ul>
+      <li>HTTPS sertifika uyarılarının dikkate alınmaması</li>
+      <li>Halka açık Wi-Fi ağlarının kullanılması</li>
+      <li>VPN kullanılmaması</li>
+      <li>Sahte sertifikaların kabul edilmesi</li>
+    </ul>
+
+    <h2>3. MITM Saldırı Türleri</h2>
+
+    <h3>3.1 Ağ Seviyesi MITM</h3>
+    <ul>
+      <li>ARP Poisoning</li>
+      <li>DHCP Spoofing</li>
+    </ul>
+
+    <h3>3.2 Taşıma Seviyesi MITM</h3>
+    <ul>
+      <li>TCP Session Hijacking</li>
+      <li>SSL Stripping</li>
+    </ul>
+
+    <h3>3.3 Uygulama Seviyesi MITM</h3>
+    <ul>
+      <li>Sahte giriş sayfaları</li>
+      <li>HTTPS'den HTTP'ye düşürme (Downgrade Attack)</li>
+    </ul>
+
+    <h2>4. MITM Saldırı Senaryosu Örneği</h2>
+    <p>Bir kullanıcı halka açık bir Wi-Fi ağı üzerinden HTTP protokolü kullanan bir web sitesine giriş yapar. Aynı ağda bulunan saldırgan ARP Spoofing yöntemiyle trafiği dinler ve kullanıcının oturum bilgilerini ele geçirir. Bu bilgiler kullanılarak kullanıcının hesabına yetkisiz erişim sağlanır.</p>
+
+    <h2>5. MITM Saldırılarına Karşı Önlemler</h2>
+    <ul>
+      <li>HTTPS ve HSTS kullanımı</li>
+      <li>VPN ile ağ trafiğinin şifrelenmesi</li>
+      <li>ARP ve DHCP koruma mekanizmaları</li>
+      <li>Sertifika doğrulama kontrolleri</li>
+      <li>Güçlü parola ve anahtar politikaları</li>
+    </ul>
+
+    <h2>6. Sonuç</h2>
+    <p>MITM saldırıları, ağ güvenliği açısından ciddi riskler oluşturmaktadır. Özellikle şifreleme kullanılmayan veya yanlış yapılandırılmış protokoller ve altyapı servisleri bu saldırılara zemin hazırlamaktadır. Güvenli yapılandırmalar ve kullanıcı farkındalığı, MITM saldırılarına karşı en etkili savunma yöntemidir.</p>
+  `
+},
     {
       id: "ornek-yazi",
       title: "Örnek: Bir vaka incelemesi nasıl yazılır",
