@@ -343,18 +343,18 @@
   body: `
     <img src="images/YARA.jpg" alt="YARA Diagramı" style="width:100%; background:#ffffff; padding:24px; border-radius:12px; margin:0 0 20px; display:block;">
     <h2>1. Giriş</h2>
-    <p>Bir dosya sisteminize düşüyor. AV sessiz. EDR alarm vermiyor. Ama siz bir şeylerin yanlış olduğunu hissediyorsunuz. İşte tam bu noktada YARA devreye giriyor.</p>
-    <p>Bu yazıda YARA'nın ne olduğunu, nasıl çalıştığını ve gerçek MITRE ATT&CK tekniklerine karşı nasıl kural yazıldığını anlatacağım. Bash reverse shell'den Squiblydoo'ya, LD_PRELOAD'dan certutil abuse'a kadar 8 farklı teknik için yazdığım kuralları ve arkasındaki mantığı adım adım açıklayacağım.</p>
+    <p>Bir dosya sisteminize düşüyor. AV sessiz. <strong>EDR</strong> alarm vermiyor. Ama siz bir şeylerin yanlış olduğunu hissediyorsunuz. İşte tam bu noktada YARA devreye giriyor.</p>
+    <p>Bu yazıda YARA'nın ne olduğunu, nasıl çalıştığını ve gerçek <strong>MITRE ATT&CK</strong> tekniklerine karşı nasıl kural yazıldığını anlatacağım. <strong>Bash reverse shell'den Squiblydoo'ya, LD_PRELOAD'dan certutil abuse'a</strong> kadar 8 farklı teknik için yazdığım kuralları ve arkasındaki mantığı adım adım açıklayacağım.</p>
 
     <h2>YARA Nedir?</h2>
-    <p>YARA — "Yet Another Recursive Acronym" — dosya ve bellek içeriğini string, byte pattern ve mantıksal koşullarla eşleştirerek kötü amaçlı yazılımları tanımlamaya yarayan açık kaynaklı bir pattern-matching aracıdır. VirusTotal bünyesinde Victor Alvarez tarafından geliştirilmiştir.</p>
+    <p>YARA — <strong>"Yet Another Recursive Acronym"</strong> — dosya ve bellek içeriğini string, byte pattern ve mantıksal koşullarla eşleştirerek kötü amaçlı yazılımları tanımlamaya yarayan açık kaynaklı bir pattern-matching aracıdır. VirusTotal bünyesinde Victor Alvarez tarafından geliştirilmiştir.</p>
     <p>En basit tanımıyla: <strong>"Bu string bu dosyada var mı?"</strong> sorusunu soran ve buna göre alarm üreten bir araç. Ama YARA'yı güçlü kılan şey bu basitliğin ötesinde. String kombinasyonları, byte pattern'leri, dosya boyutu kontrolü, PE header analizi, regex — bunların hepsini bir arada kullanarak çok hassas ve güçlü tespit kuralları yazabiliyorsunuz.</p>
 
     <h2>YARA ile CrowdStrike IOA Arasındaki Fark</h2>
     <p>İkisi de tehdit tespit ediyor ama çalışma mantıkları tamamen farklı.</p>
     <p><strong>CrowdStrike IOA</strong> canlı process davranışını izliyor. Process tree'ye bakıyor, parent-child ilişkisini analiz ediyor, komut satırı argümanlarını değerlendiriyor. Kısacası bir şey <em>çalışırken</em> yakalıyor.</p>
     <p><strong>YARA</strong> ise statik analiz yapıyor. Bir dosyanın içindeki string'lere, byte dizilerine veya pattern'lere bakıyor. Dosya çalışmak zorunda değil — sadece disk üzerinde var olması yeterli. Hatta memory dump alıp bellekteki içeriği de tarayabiliyorsunuz.</p>
-    <p>Bu iki yaklaşım birbirini tamamlıyor. Bir saldırgan script'ini diske yazdıysa YARA yakalar. Çalıştırdıysa IOA yakalar. İkisi birlikte kullanıldığında savunma katmanı çok daha sağlam oluyor.</p>
+    <p>Bu iki yaklaşım birbirini tamamlıyor. <strong>Bir saldırgan script'ini diske yazdıysa YARA yakalar</strong>. Çalıştırdıysa <strong>IOA</strong> yakalar. İkisi birlikte kullanıldığında savunma katmanı çok daha sağlam oluyor.</p>
 
     <h2>YARA Kural Yapısı</h2>
     <p>Bir YARA kuralı üç ana bölümden oluşuyor: <strong>meta</strong>, <strong>strings</strong> ve <strong>condition</strong>.</p>
@@ -374,7 +374,7 @@
     <p><strong>meta:</strong> Kural hakkında bilgi. Zorunlu değil ama önemli — özellikle MITRE ID'si ve açıklama her zaman eklenmelidir.</p>
     <p><strong>strings:</strong> Aranacak pattern'ler. ASCII/Unicode string, hex byte pattern veya regex olarak tanımlanabilir.</p>
     <p><strong>condition:</strong> Kuralın tetikleneceği koşul. Temel operatörler: <code>any of ($s*)</code> herhangi biri eşleşirse, <code>all of ($s*)</code> tümü eşleşmeli, <code>uint16(0) == 0x5A4D</code> PE dosyası kontrolü, <code>filesize &lt; 1MB</code> dosya boyutu koşulu.</p>
-    <p>Condition'ı doğru yazmak kural yazımının kalbidir. Çok geniş yazarsanız false positive yağmuruna tutulursunuz. Çok dar yazarsanız gerçek tehditler gözden kaçar.</p>
+    <p><strong>Not</strong>:Condition'ı doğru yazmak kural yazımının <strong>kalbidir</strong>. Çok geniş yazarsanız false positive yağmuruna tutulursunuz. Çok dar yazarsanız gerçek tehditler gözden kaçar.</p>
 
     <h2>Bölüm 1: MITRE ATT&CK Execution Teknikleri</h2>
 
