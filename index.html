@@ -325,11 +325,7 @@
   function stopBgAnimation(){
     canvas.style.opacity = '0';
   }
-  // -----------------------------------------------------
-
-  // ---- YAZILAR BURADA ----
-  // Her yazı için: id (url'de #id olarak görünür, boşluksuz), title, date, excerpt (listede görünen özet),
-  // body (tam yazı, basit HTML kullanabilirsin: <p>, <pre><code>, <strong> vb.)
+ 
   const posts = [
       {
   id: "yara-ile-tehdit-tespiti",
@@ -721,7 +717,7 @@ mshta.exe javascript:alert("Test");close()</code></pre>
   `
 }
   ];
-  // -------------------------
+  
 
   const listEl = document.getElementById('post-list');
   const detailEl = document.getElementById('post-detail');
@@ -824,7 +820,7 @@ mshta.exe javascript:alert("Test");close()</code></pre>
 
   renderList();
 
-  // Sayfa doğrudan bir #yazi-id veya #hakkimda ile açılırsa ona göre göster
+  
   const initial = location.hash.replace('#','');
   if(initial === 'hakkimda'){
     showAbout();
