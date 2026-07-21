@@ -377,7 +377,7 @@
     <p>Scheduled Dashboard Reports, belirli aralıklarla otomatik rapor üreten ve ilgili kişilere ileten sistemdir. Haftalık/aylık güvenlik özeti raporları otomatik oluşturulur. CISO veya yönetime düzenli raporlama, KVKK ve ISO 27001 gibi uyumluluk gereksinimleri için denetim raporları bu bölümden yönetilir.</p>
 
     <h2>Bölüm 2: Case Management</h2>
-    <p>Case Management, birden fazla alarmı ve olayı tek bir vaka çatısı altında toplayarak soruşturma ve yanıt süreçlerini koordine eden merkezi yönetim sistemidir. Bir saldırı genellikle tek bir alarmdan oluşmaz — phishing e-postası, ardından şüpheli giriş, ardından lateral movement, ardından ransomware. Bunların hepsi ayrı alarmlardır. Case Management bu alarmları tek bir saldırı hikayesi olarak birleştirir.</p>
+    <p>Case Management, birden fazla alarmı ve olayı tek bir vaka çatısı altında toplayarak soruşturma ve yanıt süreçlerini koordine eden merkezi yönetim sistemidir. <strong>Bir saldırı genellikle tek bir alarmdan oluşmaz — phishing e-postası, ardından şüpheli giriş, ardından lateral movement, ardından ransomware. Bunların hepsi ayrı alarmlardır.</strong> Case Management bu alarmları tek bir saldırı hikayesi olarak birleştirir.</p>
 
     <h3>Case Templates</h3>
     <p>Case Templates, belirli olay türleri için önceden tanımlanmış yapılandırılmış vaka şablonlarıdır. Her olay türü için sıfırdan başlamak yerine ilgili şablon açılır ve doldurulur. Şablonlar aynı zamanda Playbook işlevi görür — olay anında "ne yapacağız?" yerine şablonu takip edersiniz. Müdahale süresi kısalır, adım atlanma riski azalır.</p>
@@ -445,10 +445,10 @@
     <p>KVKK ve ISO 27001 log saklama gereksinimleri için retention politikaları kritiktir. "Kim ne zaman neye erişti?" sorusunu 2 yıl öncesi için de yanıtlayabilmek bu ayarlarla mümkün olur.</p>
 
     <h2>Bölüm 4: Entity Management</h2>
-    <p>Entity Management, ortamdaki tüm dijital varlıkların — cihazlar ve kullanıcılar — SIEM perspektifinden merkezi görünürlüğünü sağlayan bölümdür. Bir güvenlik olayını analiz ederken "bu cihaz nedir, bu kullanıcı kim" sorularına hızlıca cevap verir.</p>
+    <p>Entity Management, ortamdaki tüm dijital varlıkların — cihazlar ve kullanıcılar — SIEM perspektifinden merkezi görünürlüğünü sağlayan bölümdür. <strong>Bir güvenlik olayını analiz ederken "bu cihaz nedir, bu kullanıcı kim" sorularına hızlıca cevap verir.</strong></p>
 
     <h3>Hosts</h3>
-    <p>Hosts bölümü, Falcon sensörü kurulu tüm endpoint cihazlarının SIEM bağlamındaki görünümüdür. Her cihaz için hostname, IP, OS, sensor versiyonu, risk skoru, detection geçmişi, ağ bağlantıları ve process ağacı görüntülenebilir. Bir ransomware alarmı geldiğinde önce Hosts'tan etkilenen cihazın risk geçmişine bakılır — "Bu cihazda daha önce şüpheli aktivite var mıydı? Hangi kullanıcı logon olmuş? Kritik bir sunucu mu?" gibi sorular burada yanıtlanır.</p>
+    <p>Hosts bölümü, Falcon sensörü kurulu tüm endpoint cihazlarının SIEM bağlamındaki görünümüdür. Her cihaz için hostname, IP, OS, sensor versiyonu, risk skoru, detection geçmişi, ağ bağlantıları ve process ağacı görüntülenebilir. <strong>Bir ransomware alarmı geldiğinde önce Hosts'tan etkilenen cihazın risk geçmişine bakılır — "Bu cihazda daha önce şüpheli aktivite var mıydı? Hangi kullanıcı logon olmuş? Kritik bir sunucu mu?" gibi sorular burada yanıtlanır.</strong></p>
 
     <h3>Users</h3>
     <p>Users bölümü, ortamdaki tüm kullanıcı hesaplarının SIEM log perspektifinden görünümüdür. IDP modülündeki All Users'dan farklı olarak burada log aktiviteleri ve detection geçmişi ön plandadır. Her kullanıcı için aktivite özeti, risk skoru, detection geçmişi ve şüpheli aktivite işaretleri görüntülenir.</p>
@@ -463,15 +463,15 @@
       <li>Playbook şablonları: Olay türlerine göre hazır müdahale adımları</li>
       <li>Custom içerik: Kendi yazdığınız kurallar ve sorgular da buraya eklenir</li>
     </ul>
-    <p>En güçlü özelliği MITRE ATT&amp;CK coverage görünümü. Coverage haritası, hangi teknikler için detection var hangisi eksik olduğunu MITRE ATT&amp;CK matrix üzerinde gösteriyor. Gap analizi sayesinde "T1059.001 PowerShell için kuralım var mı?" sorusu saniyeler içinde yanıtlanıyor. Öneri sistemi eksik coverage için uygulanabilir detection içeriği öneriyor.</p>
-    <p>"APT29 gibi bir tehdit aktörü bize saldırsa, hangi tekniklerini yakalayabiliriz?" sorusunu Unified Content Library ile yanıtlayabilirsiniz. Bu bölüm savunmanızın haritasıdır.</p>
+    <p>En güçlü özelliği MITRE ATT&amp;CK coverage görünümü. Coverage haritası, hangi teknikler için detection var hangisi eksik olduğunu MITRE ATT&amp;CK matrix üzerinde gösteriyor. Gap analizi sayesinde "<strong>T1059.001 PowerShell için kuralım var mı?</strong>" sorusu saniyeler içinde yanıtlanıyor. Öneri sistemi eksik coverage için uygulanabilir detection içeriği öneriyor.</p>
+    <p>"<strong>APT29 gibi bir tehdit aktörü bize saldırsa, hangi tekniklerini yakalayabiliriz?</strong>" sorusunu Unified Content Library ile yanıtlayabilirsiniz. Bu bölüm savunmanızın haritasıdır.</p>
     <p>CrowdStrike yeni tehdit aktörleri ve saldırı teknikleri keşfedildikçe bu kütüphaneyi günceller. Güncellemeler otomatik uygulanır, özelleştirilmiş içerikler etkilenmez.</p>
 
     <h2>Genel Değerlendirme</h2>
-    <p>Next-Gen SIEM'i tek cümlede özetlemek gerekirse: alertten soruşturmaya, soruşturmadan yanıta kadar tüm süreç tek bir konsolda tamamlanıyor.</p>
+    <p><strong>Next-Gen SIEM'i tek cümlede özetlemek gerekirse: alertten soruşturmaya, soruşturmadan yanıta kadar tüm süreç tek bir konsolda tamamlanıyor.</strong></p>
     <p>Event Search ve Advanced Event Search ile log verisi sorgulanır. Dashboard'larla görünürlük sağlanır. Case Management ile soruşturma koordine edilir. Entity Management ile host ve kullanıcı bağlamı anlaşılır. Unified Content Library ile MITRE ATT&amp;CK coverage'ı izlenir.</p>
     <p>Geleneksel SIEM'lerde bu adımların her biri farklı araçlarda yapılırdı. Platform geçişleri zaman kaybettirir, bağlam kopar, kritik detaylar gözden kaçar. Next-Gen SIEM bu parçalanmışlığı ortadan kaldırıyor.</p>
-    <p>Şüpheli bir aktivite dikkat çektiğinde Event Search veya Advanced Event Search üzerinden derinlemesine araştırma yapılır. Bağlamı tamamlamak için Entity Management'a geçilir. Bulgular netleşince case güncellenir. Son olarak Unified Content Library'deki hazır query paketleri ile henüz alarm üretmemiş tehditlere yönelik proaktif tehdit avı yapılır. Tüm bu adımlar tek bir konsolda, platform değiştirmeden tamamlanır.</p>
+    <p>Şüpheli bir aktivite dikkat çektiğinde Event Search veya Advanced Event Search üzerinden derinlemesine araştırma yapılır. Bağlamı tamamlamak için Entity Management'a geçilir. Bulgular netleşince case güncellenir. Son olarak Unified Content Library'deki hazır query paketleri ile henüz alarm üretmemiş tehditlere yönelik proaktif tehdit avı yapılır.<strong> Tüm bu adımlar tek bir konsolda, platform değiştirmeden tamamlanır.</strong></p>
   `
 },
     //------------------------------------------------------------------------
