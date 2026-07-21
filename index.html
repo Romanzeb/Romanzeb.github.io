@@ -327,6 +327,154 @@
   }
  
   const posts = [
+    {
+  id: "crowdstrike-next-gen-siem",
+  title: "CrowdStrike Falcon Next-Gen SIEM — Modül Yapısı ve Kullanımı",
+  date: "22 Temmuz 2026",
+  excerpt: "Geleneksel SIEM'ler log toplar, indeksler ve arama yapar. Ama modern saldırılar bu döngünün çok ötesine geçti. Bu yazıda CrowdStrike Falcon Next-Gen SIEM'in ana bölümlerini, her menünün ne işe yaradığını ve SOC perspektifinden nasıl kullanıldığını anlatıyorum.",
+  body: `
+    <p>Geleneksel SIEM'ler log toplar, indeksler ve arama yapar. Ama modern saldırılar bu döngünün çok ötesine geçti. Bir saldırgan ağa girdikten sonra saatler değil dakikalar içinde yanal hareket yapabiliyor, kimlik bilgilerini ele geçirebiliyor, veri sızdırabiliyor. Geleneksel SIEM bu hıza yetişemiyor.</p>
+    <p>CrowdStrike Falcon Next-Gen SIEM, bu boşluğu kapatmak için tasarlanmış. Bu yazıda platformun ana bölümlerini, her menünün ne işe yaradığını ve SOC perspektifinden nasıl kullanıldığını anlatacağım.</p>
+
+    <h2>Next-Gen SIEM Nedir?</h2>
+    <p>CrowdStrike Falcon Next-Gen SIEM, EDR, kimlik koruması, tehdit istihbaratı ve log yönetimini tek bir platformda birleştiren yapay zeka destekli güvenlik operasyon platformudur.</p>
+    <p>Geleneksel SIEM'den farkını şöyle özetleyebilirim: Geleneksel SIEM index bazlı çalışır — bu yavaşlık ve yüksek depolama maliyeti demektir. Next-Gen SIEM ise index-free mimarisiyle petabyte ölçeğinde veriye 150x daha hızlı erişim sağlıyor. Veri kaynağı açısından geleneksel SIEM sadece log dosyalarına bakarken, Next-Gen SIEM native CrowdStrike verisi, üçüncü taraf entegrasyonlar ve bulut verisini aynı anda işleyebiliyor. Tespit tarafında statik korelasyon kuralları yerine AI destekli davranış analizi ve UEBA devrede. Maliyet açısından ise depolama maliyeti %80'e kadar düşüyor.</p>
+    <p>Temel özellikleri:</p>
+    <ul>
+      <li>Index-free mimari: Petabyte ölçeğinde veriye 150x daha hızlı erişim</li>
+      <li>AI destekli tespit: Native ve üçüncü taraf veriler üzerinde birleşik detection</li>
+      <li>Entegre Case Management: Soruşturma ve yanıt için tek merkezi nokta</li>
+      <li>CrowdStrike Query Language (CQL): Güçlü ve esnek sorgu dili</li>
+      <li>Falcon Onum: AI destekli data pipeline — 5x daha hızlı streaming, %50 daha düşük depolama maliyeti</li>
+      <li>Üçüncü taraf veri entegrasyonu: Falcon Insight müşterilerine günlük 10 GB ücretsiz ingestion</li>
+    </ul>
+
+    <h2>Bölüm 1: Monitor and Investigate</h2>
+    <p>Monitor and Investigate, Next-Gen SIEM'in ana izleme ve soruşturma merkezidir. Güvenlik olaylarının gerçek zamanlı takip edildiği, tehditlerin derinlemesine incelendiği ve soruşturma süreçlerinin yönetildiği bölümdür.</p>
+
+    <h3>Event Search</h3>
+    <p>Event Search, tüm log kaynaklarındaki olayları hızlıca aramak ve filtrelemek için kullanılan temel sorgu arayüzüdür. Günlük SOC operasyonları için tasarlanmıştır. CQL ile sorgular yazılır, zaman bazlı filtreleme, alan bazlı filtreleme, free-text arama ve regex desteği mevcuttur.</p>
+    <p>Örnek bir CQL sorgusu:</p>
+    <pre><code>event_simpleName=ProcessRollup2 | FileName=/.*powershell.*/i | CommandLine=/*-enc*/</code></pre>
+    <p>Bu sorgu, sistem genelinde encoded komutla çalıştırılan tüm PowerShell process'lerini listeler.</p>
+
+    <h3>Advanced Event Search</h3>
+    <p>Advanced Event Search, Event Search'ün daha güçlü versiyonudur. Karmaşık soruşturmalar, korelasyon aramaları ve threat hunting için kullanılır. Event Search hızlı günlük operasyonlar için idealken, Advanced Event Search derin analizler için kullanılır. Aggregation, istatistik ve multi-source sorgu gibi gelişmiş özellikler sadece burada mevcut.</p>
+    <p>Öne çıkan özellikler:</p>
+    <ul>
+      <li>Çoklu veri kaynağı sorgulama: Falcon EDR, IDP, ağ logları ve üçüncü taraf kaynaklar aynı sorguda</li>
+      <li>Aggregation ve istatistik: Olayları gruplama, sayma, ortalama alma</li>
+      <li>Live streaming search: Gerçek zamanlı olarak gelen olayları canlı izleme</li>
+      <li>Saved searches: Sık kullanılan sorguları kaydetme ve tekrar kullanma</li>
+      <li>Falcon Query Translation Agent: Eski SIEM sorgularını — Splunk dahil — otomatik olarak CQL'e çevirir</li>
+    </ul>
+
+    <h3>Dashboards</h3>
+    <p>Dashboards, güvenlik olaylarını gerçek zamanlı görselleştiren özelleştirilebilir izleme panolarıdır. Widget bazlı yapısıyla grafik, tablo, sayaç ve harita gibi farklı görselleştirme türlerini destekler. Her analist kendi iş akışına göre dashboard oluşturabilir, ekip içinde paylaşabilir.</p>
+    <p>Tipik bir SOC dashboard'unda şunlar yer alır: Son 24 saatteki detection sayısı ve severity dağılımı, en çok alarm üreten kullanıcılar ve sistemler, şüpheli bağlantıların kaynak ülkelerini gösteren coğrafi harita, failed login denemeleri ve C2 iletişim girişimleri.</p>
+
+    <h3>Scheduled Dashboard Reports</h3>
+    <p>Scheduled Dashboard Reports, belirli aralıklarla otomatik rapor üreten ve ilgili kişilere ileten sistemdir. Haftalık/aylık güvenlik özeti raporları otomatik oluşturulur. CISO veya yönetime düzenli raporlama, KVKK ve ISO 27001 gibi uyumluluk gereksinimleri için denetim raporları bu bölümden yönetilir.</p>
+
+    <h2>Bölüm 2: Case Management</h2>
+    <p>Case Management, birden fazla alarmı ve olayı tek bir vaka çatısı altında toplayarak soruşturma ve yanıt süreçlerini koordine eden merkezi yönetim sistemidir. Bir saldırı genellikle tek bir alarmdan oluşmaz — phishing e-postası, ardından şüpheli giriş, ardından lateral movement, ardından ransomware. Bunların hepsi ayrı alarmlardır. Case Management bu alarmları tek bir saldırı hikayesi olarak birleştirir.</p>
+
+    <h3>Case Templates</h3>
+    <p>Case Templates, belirli olay türleri için önceden tanımlanmış yapılandırılmış vaka şablonlarıdır. Her olay türü için sıfırdan başlamak yerine ilgili şablon açılır ve doldurulur. Şablonlar aynı zamanda Playbook işlevi görür — olay anında "ne yapacağız?" yerine şablonu takip edersiniz. Müdahale süresi kısalır, adım atlanma riski azalır.</p>
+    <p>Örnek şablonlar:</p>
+    <ul>
+      <li>Ransomware vakası: Containment adımları, iletişim listesi, forensic checklist</li>
+      <li>Phishing vakası: Etkilenen kullanıcılar, kötü amaçlı URL/ek analizi, kimlik bilgisi sıfırlama</li>
+      <li>Insider threat: Kullanıcı aktivite analizi, HR bildirimi, yasal süreç adımları</li>
+      <li>BEC (Business Email Compromise): Mail akış analizi, finansal işlem durdurma</li>
+    </ul>
+
+    <h3>SLAs</h3>
+    <p>SLA (Service Level Agreement), bir vakanın ne kadar sürede yanıt alması ve çözüme kavuşturulması gerektiğini tanımlayan kurallardır. Ekibin performans standartlarını belirler. SLA ihlali durumunda otomatik eskalasyon tetiklenir — belirlenen kişilere bildirim gönderilir ve vakanın önceliği artırılır. Bu sayede kritik olaylar göz ardı edilmez.</p>
+
+    <h3>Notification Groups</h3>
+    <p>Notification Groups, hangi olayda kimin bilgilendirileceğini tanımlayan gruplandırma sistemidir. Doğru kişinin doğru zamanda bilgilendirilmesini sağlar.</p>
+    <ul>
+      <li>SOC Tier 1: Tüm alarmlardan haberdar edilir</li>
+      <li>SOC Tier 2: Sadece High ve Critical alarmlardan</li>
+      <li>CISO grubu: Critical olaylar ve SLA ihlallerinden</li>
+      <li>Legal grubu: Veri ihlali şüphesi durumunda devreye girer</li>
+    </ul>
+
+    <h3>Case Dashboard</h3>
+    <p>Case Dashboard, tüm açık vakaların durumunu, önceliklerini, atanmış analistleri ve SLA sağlık durumunu gösteren merkezi panodur. Açık/Kapalı/Bekleyen vaka sayıları, SLA uyum oranı, analist iş yükü dağılımı ve trend analizi burada görülür.</p>
+
+    <h3>Mirror Configuration</h3>
+    <p>Mirror Configuration, CrowdStrike vakalarını harici ticketing ve ITSM sistemleriyle iki yönlü senkronize eden entegrasyon aracıdır. Jira ve ServiceNow başlıca entegrasyon hedefleridir. Güvenlik ekibi CrowdStrike'ta çalışırken IT operasyon ekibi kendi araçlarında çalışmaya devam edebilir — veriler otomatik senkronize olur.</p>
+
+    <h2>Bölüm 3: Log Management</h2>
+    <p>Log Management, farklı kaynaklardan gelen logların toplanması, normalize edilmesi, depolanması ve aranması için kullanılan kapsamlı veri yönetim altyapısıdır. Next-Gen SIEM'in "beyni" bu bölümdür.</p>
+
+    <h3>Data Onboarding</h3>
+    <p>Data Onboarding, farklı sistemlerin loglarını CrowdStrike Next-Gen SIEM'e bağlamak için kullanılan entegrasyon merkezidir. Desteklenen veri kaynağı türleri:</p>
+    <ul>
+      <li>Native CrowdStrike verisi: EDR, IDP, Cloud Security — otomatik entegre, ek yapılandırma gerekmez</li>
+      <li>Üçüncü taraf güvenlik araçları: Palo Alto, Fortinet, Cisco, Check Point gibi firewall'lar</li>
+      <li>Kimlik sağlayıcıları: Azure AD, Okta, LDAP</li>
+      <li>Bulut platformları: AWS (GuardDuty, CloudTrail, S3), Azure (Sentinel, Defender), GCP</li>
+      <li>On-premises sistemler: Windows Event Log, Linux syslog, network cihazları</li>
+    </ul>
+    <p>Falcon Sensor-Based Log Collection, zaten ortamda kurulu olan Falcon sensor'ünü ayrı bir log collector kurmadan üçüncü taraf log kaynaklarını toplayabilecek şekilde genişletiyor. Otomatik veri normalizasyonu da kritik bir özellik: Her sistemin logu farklı formatta gelir. Data Onboarding, bunları CrowdStrike Parsing Standard (CPS) formatına otomatik normalize eder — böylece tüm kaynaklar tek sorguda aranabilir hale gelir.</p>
+    <p>Falcon Insight (EDR) müşterilerine günlük 10 GB üçüncü taraf veri ingestion ücretsiz sunulmaktadır.</p>
+
+    <h3>Lookup Files</h3>
+    <p>Lookup Files, sorguları zenginleştirmek için kullanılan referans tablolardır. CSV formatında yüklenen bu dosyalar, log verilerini ek bağlamla ilişkilendirmeyi sağlar.</p>
+    <ul>
+      <li>Şirket IP listesi: "Bu IP iç ağ mı dış mı?" sorusunu otomatik yanıtlar</li>
+      <li>VIP kullanıcı listesi: CEO, CFO gibi kritik kullanıcıların aktiviteleri daha yüksek öncelikle izlenir</li>
+      <li>Bilinen kötü IP'ler: Threat intelligence feed'inden gelen IOC listesi — bağlantılar anında eşleştirilir</li>
+      <li>Asset envanter: Kritik sunucuların listesi — bu sistemlere yapılan aktiviteler öncelikli alarm üretir</li>
+    </ul>
+    <p>Örnek CQL sorgusu:</p>
+    <pre><code>event_simpleName=UserLogon | lookup src_ip in known_bad_ips.csv | where match=true</code></pre>
+    <p>Bu sorgu, bilinen kötü IP'lerden gelen tüm başarılı girişleri tespit eder.</p>
+
+    <h3>Data Settings</h3>
+    <p>Data Settings, log verilerinin yaşam döngüsünü ve yönetim politikalarını yapılandırdığınız bölümdür.</p>
+    <ul>
+      <li>Retention politikaları: Hangi log türü ne kadar süre saklanacak — kritik güvenlik logları için 1-2 yıl, rutin aktivite logları için 90 gün gibi</li>
+      <li>Depolama optimizasyonu: Falcon Onum ile sık erişilen veriler hızlı depolamada, eski veriler maliyet etkin uzun vadeli depolamada tutulur</li>
+      <li>Parser yönetimi: Gelen log formatlarını parse eden kuralların durumu ve güncelleme takibi</li>
+      <li>Amazon S3 arşivleme: Falcon Data Replicator (FDR) ile üçüncü taraf SIEM verisi otomatik S3'e arşivlenebilir</li>
+    </ul>
+    <p>KVKK ve ISO 27001 log saklama gereksinimleri için retention politikaları kritiktir. "Kim ne zaman neye erişti?" sorusunu 2 yıl öncesi için de yanıtlayabilmek bu ayarlarla mümkün olur.</p>
+
+    <h2>Bölüm 4: Entity Management</h2>
+    <p>Entity Management, ortamdaki tüm dijital varlıkların — cihazlar ve kullanıcılar — SIEM perspektifinden merkezi görünürlüğünü sağlayan bölümdür. Bir güvenlik olayını analiz ederken "bu cihaz nedir, bu kullanıcı kim" sorularına hızlıca cevap verir.</p>
+
+    <h3>Hosts</h3>
+    <p>Hosts bölümü, Falcon sensörü kurulu tüm endpoint cihazlarının SIEM bağlamındaki görünümüdür. Her cihaz için hostname, IP, OS, sensor versiyonu, risk skoru, detection geçmişi, ağ bağlantıları ve process ağacı görüntülenebilir. Bir ransomware alarmı geldiğinde önce Hosts'tan etkilenen cihazın risk geçmişine bakılır — "Bu cihazda daha önce şüpheli aktivite var mıydı? Hangi kullanıcı logon olmuş? Kritik bir sunucu mu?" gibi sorular burada yanıtlanır.</p>
+
+    <h3>Users</h3>
+    <p>Users bölümü, ortamdaki tüm kullanıcı hesaplarının SIEM log perspektifinden görünümüdür. IDP modülündeki All Users'dan farklı olarak burada log aktiviteleri ve detection geçmişi ön plandadır. Her kullanıcı için aktivite özeti, risk skoru, detection geçmişi ve şüpheli aktivite işaretleri görüntülenir.</p>
+    <p>UEBA bağlantısı burada kritik. Next-Gen SIEM her kullanıcı için normal davranış baseline'ı oluşturur. "Bu kullanıcı normalde sabah 9'da Türkiye'den giriş yapar, sadece muhasebe sistemlerine erişir." Bunun dışına çıkan her aktivite anomali olarak işaretlenir ve Users bölümünde görülür.</p>
+
+    <h2>Bölüm 5: Unified Content Library</h2>
+    <p>Unified Content Library, Next-Gen SIEM'deki tüm detection içeriklerini — kurallar, dashboard şablonları, sorgu paketleri — merkezi olarak yöneten ve MITRE ATT&CK ile eşleştiren kütüphanedir.</p>
+    <ul>
+      <li>Out-of-the-box detection kuralları: CrowdStrike'ın hazır olarak sunduğu yüzlerce detection kuralı</li>
+      <li>Dashboard şablonları: Ransomware, insider threat, cloud güvenliği gibi konularda hazır SOC dashboard'ları</li>
+      <li>Query paketleri: Belirli tehdit senaryoları için hazır CQL sorgu koleksiyonları</li>
+      <li>Playbook şablonları: Olay türlerine göre hazır müdahale adımları</li>
+      <li>Custom içerik: Kendi yazdığınız kurallar ve sorgular da buraya eklenir</li>
+    </ul>
+    <p>En güçlü özelliği MITRE ATT&amp;CK coverage görünümü. Coverage haritası, hangi teknikler için detection var hangisi eksik olduğunu MITRE ATT&amp;CK matrix üzerinde gösteriyor. Gap analizi sayesinde "T1059.001 PowerShell için kuralım var mı?" sorusu saniyeler içinde yanıtlanıyor. Öneri sistemi eksik coverage için uygulanabilir detection içeriği öneriyor.</p>
+    <p>"APT29 gibi bir tehdit aktörü bize saldırsa, hangi tekniklerini yakalayabiliriz?" sorusunu Unified Content Library ile yanıtlayabilirsiniz. Bu bölüm savunmanızın haritasıdır.</p>
+    <p>CrowdStrike yeni tehdit aktörleri ve saldırı teknikleri keşfedildikçe bu kütüphaneyi günceller. Güncellemeler otomatik uygulanır, özelleştirilmiş içerikler etkilenmez.</p>
+
+    <h2>Genel Değerlendirme</h2>
+    <p>Next-Gen SIEM'i tek cümlede özetlemek gerekirse: alertten soruşturmaya, soruşturmadan yanıta kadar tüm süreç tek bir konsolda tamamlanıyor.</p>
+    <p>Event Search ve Advanced Event Search ile log verisi sorgulanır. Dashboard'larla görünürlük sağlanır. Case Management ile soruşturma koordine edilir. Entity Management ile host ve kullanıcı bağlamı anlaşılır. Unified Content Library ile MITRE ATT&amp;CK coverage'ı izlenir.</p>
+    <p>Geleneksel SIEM'lerde bu adımların her biri farklı araçlarda yapılırdı. Platform geçişleri zaman kaybettirir, bağlam kopar, kritik detaylar gözden kaçar. Next-Gen SIEM bu parçalanmışlığı ortadan kaldırıyor.</p>
+    <p>Şüpheli bir aktivite dikkat çektiğinde Event Search veya Advanced Event Search üzerinden derinlemesine araştırma yapılır. Bağlamı tamamlamak için Entity Management'a geçilir. Bulgular netleşince case güncellenir. Son olarak Unified Content Library'deki hazır query paketleri ile henüz alarm üretmemiş tehditlere yönelik proaktif tehdit avı yapılır. Tüm bu adımlar tek bir konsolda, platform değiştirmeden tamamlanır.</p>
+  `
+},
+    //------------------------------------------------------------------------
       {
   id: "yara-ile-tehdit-tespiti",
   title: "YARA ile Tehdit Tespiti — MITRE ATT&CK Tekniklerine ve LOLBins'e Özel Kurallar",
@@ -607,6 +755,7 @@ mshta.exe javascript:alert("Test");close()</code></pre>
     <p>Condition kombinasyonları ise false positive ile false negative arasındaki dengeyi kuruyor. Çok geniş yazarsanız alarm gürültüsüne boğulursunuz. Çok dar yazarsanız gerçek tehditler gözden kaçar. Bu dengeyi bulmak kural yazımının en zor ve en kritik kısmı.</p>
   `
 },
+    //------------------------------------------------------------------------
   {
   id: "MITM",
   title: "Görünmeyen Üçüncü Kişi Man-in-the-Middle (MITM) Saldırıları",
