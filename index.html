@@ -414,11 +414,42 @@ Servis hesabı hash'i ele geçirilirse
         <tr><th>Özellik</th><th>Golden Ticket</th><th>Silver Ticket</th></tr>
       </thead>
       <tbody>
-        <p><strong>Ele geçirilen hash:</strong> Golden Ticket → krbtgt hesabı | Silver Ticket → Hedef servis hesabı</p>
-        <p><strong>Üretilen bilet:</strong> Golden Ticket → TGT | Silver Ticket → TGS</p>
-        <p><strong>KDC ile etkileşim:</strong> Her ikisinde de yok (tamamen offline)</p>
-        <p><strong>Erişim kapsamı:</strong> Golden Ticket → Domain genelinde, tüm servisler | Silver Ticket → Yalnızca ilgili servis</p>
-        <p><strong>Tespit zorluğu:</strong> Golden Ticket → Nispeten daha kolay | Silver Ticket → Çok daha zor</p>
+        <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+  <thead>
+    <tr style="background:#1a1a2e; color:#00ff9d;">
+      <th style="padding:10px; border:1px solid #333; text-align:left;">Özellik</th>
+      <th style="padding:10px; border:1px solid #333; text-align:left;">Golden Ticket</th>
+      <th style="padding:10px; border:1px solid #333; text-align:left;">Silver Ticket</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:10px; border:1px solid #333;">Hash</td>
+      <td style="padding:10px; border:1px solid #333;">krbtgt</td>
+      <td style="padding:10px; border:1px solid #333;">Servis hesabı</td>
+    </tr>
+    <tr style="background:#111;">
+      <td style="padding:10px; border:1px solid #333;">Bilet</td>
+      <td style="padding:10px; border:1px solid #333;">TGT</td>
+      <td style="padding:10px; border:1px solid #333;">TGS</td>
+    </tr>
+    <tr>
+      <td style="padding:10px; border:1px solid #333;">KDC etkileşimi</td>
+      <td style="padding:10px; border:1px solid #333;">Yok</td>
+      <td style="padding:10px; border:1px solid #333;">Yok</td>
+    </tr>
+    <tr style="background:#111;">
+      <td style="padding:10px; border:1px solid #333;">Kapsam</td>
+      <td style="padding:10px; border:1px solid #333;">Tüm domain</td>
+      <td style="padding:10px; border:1px solid #333;">Tek servis</td>
+    </tr>
+    <tr>
+      <td style="padding:10px; border:1px solid #333;">Tespit</td>
+      <td style="padding:10px; border:1px solid #333;">Nispeten kolay</td>
+      <td style="padding:10px; border:1px solid #333;">Çok zor</td>
+    </tr>
+  </tbody>
+</table>
       </tbody>
     </table>
 
