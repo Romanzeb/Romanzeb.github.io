@@ -327,7 +327,7 @@
   }
  
   const posts = [
-    {
+   {
   id: "golden-ticket-silver-ticket",
   title: "Golden Ticket ve Silver Ticket — Kerberos'un Kalbine Yapılan Saldırılar",
   date: "21 Temmuz 2026",
@@ -409,47 +409,40 @@ Servis hesabı hash'i ele geçirilirse
     <p>Bu da silver ticket'ı tespit açısından daha sinsi kılan şeydir: KDC hiç devreye girmediği için, domain controller üzerindeki Kerberos loglarında bu işlemin izi neredeyse hiç görünmez.</p>
 
     <h2>Karşılaştırma</h2>
-    <table>
+    <table style="width:100%; border-collapse:collapse; margin:20px 0;">
       <thead>
-        <tr><th>Özellik</th><th>Golden Ticket</th><th>Silver Ticket</th></tr>
+        <tr style="background:#1a1a2e; color:#00ff9d;">
+          <th style="padding:10px; border:1px solid #333; text-align:left;">Özellik</th>
+          <th style="padding:10px; border:1px solid #333; text-align:left;">Golden Ticket</th>
+          <th style="padding:10px; border:1px solid #333; text-align:left;">Silver Ticket</th>
+        </tr>
       </thead>
       <tbody>
-        <table style="width:100%; border-collapse:collapse; margin:20px 0;">
-  <thead>
-    <tr style="background:#1a1a2e; color:#00ff9d;">
-      <th style="padding:10px; border:1px solid #333; text-align:left;">Özellik</th>
-      <th style="padding:10px; border:1px solid #333; text-align:left;">Golden Ticket</th>
-      <th style="padding:10px; border:1px solid #333; text-align:left;">Silver Ticket</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="padding:10px; border:1px solid #333;">Hash</td>
-      <td style="padding:10px; border:1px solid #333;">krbtgt</td>
-      <td style="padding:10px; border:1px solid #333;">Servis hesabı</td>
-    </tr>
-    <tr style="background:#111;">
-      <td style="padding:10px; border:1px solid #333;">Bilet</td>
-      <td style="padding:10px; border:1px solid #333;">TGT</td>
-      <td style="padding:10px; border:1px solid #333;">TGS</td>
-    </tr>
-    <tr>
-      <td style="padding:10px; border:1px solid #333;">KDC etkileşimi</td>
-      <td style="padding:10px; border:1px solid #333;">Yok</td>
-      <td style="padding:10px; border:1px solid #333;">Yok</td>
-    </tr>
-    <tr style="background:#111;">
-      <td style="padding:10px; border:1px solid #333;">Kapsam</td>
-      <td style="padding:10px; border:1px solid #333;">Tüm domain</td>
-      <td style="padding:10px; border:1px solid #333;">Tek servis</td>
-    </tr>
-    <tr>
-      <td style="padding:10px; border:1px solid #333;">Tespit</td>
-      <td style="padding:10px; border:1px solid #333;">Nispeten kolay</td>
-      <td style="padding:10px; border:1px solid #333;">Çok zor</td>
-    </tr>
-  </tbody>
-</table>
+        <tr>
+          <td style="padding:10px; border:1px solid #333;">Hash</td>
+          <td style="padding:10px; border:1px solid #333;">krbtgt</td>
+          <td style="padding:10px; border:1px solid #333;">Servis hesabı</td>
+        </tr>
+        <tr style="background:#111;">
+          <td style="padding:10px; border:1px solid #333;">Bilet</td>
+          <td style="padding:10px; border:1px solid #333;">TGT</td>
+          <td style="padding:10px; border:1px solid #333;">TGS</td>
+        </tr>
+        <tr>
+          <td style="padding:10px; border:1px solid #333;">KDC etkileşimi</td>
+          <td style="padding:10px; border:1px solid #333;">Yok</td>
+          <td style="padding:10px; border:1px solid #333;">Yok</td>
+        </tr>
+        <tr style="background:#111;">
+          <td style="padding:10px; border:1px solid #333;">Kapsam</td>
+          <td style="padding:10px; border:1px solid #333;">Tüm domain</td>
+          <td style="padding:10px; border:1px solid #333;">Tek servis</td>
+        </tr>
+        <tr>
+          <td style="padding:10px; border:1px solid #333;">Tespit</td>
+          <td style="padding:10px; border:1px solid #333;">Nispeten kolay</td>
+          <td style="padding:10px; border:1px solid #333;">Çok zor</td>
+        </tr>
       </tbody>
     </table>
 
@@ -462,6 +455,7 @@ Servis hesabı hash'i ele geçirilirse
       <li><strong>Görünürlük sağlamak:</strong> Kerberos audit policy'leri, Event ID 4768 / 4769 / 4672 loglaması</li>
     </ul>
     <p>Göremediğini durduramayacağın için görünürlük burada kritik. Silver ticket özellikle KDC'ye hiç uğramadığı için standart Kerberos loglarında iz bırakmaz — bu yüzden servis seviyesinde izleme ayrıca yapılandırılmalıdır.</p>
+  `
 },
     //------------------------------------------------------------------------
     {
@@ -685,7 +679,7 @@ Servis hesabı hash'i ele geçirilirse
 
     <h3>T1053.003 — Cron Persistence</h3>
     <p>Cron, Linux/macOS sistemlerde zamanlanmış görevleri çalıştıran bir servistir. Saldırganlar bu servisi persistence için kullanıyor — sistem yeniden başlasa bile kötü amaçlı kod çalışmaya devam ediyor. Rocke, TeamTNT, Kinsing gibi kripto madenciliği malware aileleri ve GoldMax/Gomir gibi backdoor'lar bu tekniği aktif kullanıyor.</p>
-    <p>Tehdit altındaki dosyalar: <code>/etc/crontab</code>, <code>/etc/cron.d/*</code>, <code>/var/spool/cron/crontabs/*</code></p>
+    <p>Tehdit altındaki dosyalar: <code>/etc/crontab</code>, <code>/etc/cron.d /*</code>, <code>/var/spool/cron/crontabs/*</code></p>
     <pre><code>rule Detect_Malicious_Cron_T1053_003 {
     meta:
         description = "Crontab dosyasinda kotu amacli icerik tespiti"
