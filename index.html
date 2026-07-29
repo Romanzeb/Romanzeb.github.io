@@ -414,12 +414,11 @@ Servis hesabı hash'i ele geçirilirse
         <tr><th>Özellik</th><th>Golden Ticket</th><th>Silver Ticket</th></tr>
       </thead>
       <tbody>
-        <tr><td>Ele geçirilen hash</td><td>krbtgt hesabı</td><td>Hedef servis hesabı</td></tr>
-        <tr><td>Üretilen bilet</td><td>TGT</td><td>TGS</td></tr>
-        <tr><td>KDC ile etkileşim</td><td>Yok (tamamen offline)</td><td>Yok (tamamen offline)</td></tr>
-        <tr><td>Erişim kapsamı</td><td>Domain genelinde, tüm servisler</td><td>Yalnızca ilgili servis</td></tr>
-        <tr><td>Benzetme</td><td>Ülkenin pasaport otoritesini ele geçirmek</td><td>Tek bir binanın giriş kartını taklit etmek</td></tr>
-        <tr><td>Tespit zorluğu</td><td>Nispeten daha kolay</td><td>Çok daha zor</td></tr>
+        <p><strong>Ele geçirilen hash:</strong> Golden Ticket → krbtgt hesabı | Silver Ticket → Hedef servis hesabı</p>
+        <p><strong>Üretilen bilet:</strong> Golden Ticket → TGT | Silver Ticket → TGS</p>
+        <p><strong>KDC ile etkileşim:</strong> Her ikisinde de yok (tamamen offline)</p>
+        <p><strong>Erişim kapsamı:</strong> Golden Ticket → Domain genelinde, tüm servisler | Silver Ticket → Yalnızca ilgili servis</p>
+        <p><strong>Tespit zorluğu:</strong> Golden Ticket → Nispeten daha kolay | Silver Ticket → Çok daha zor</p>
       </tbody>
     </table>
 
