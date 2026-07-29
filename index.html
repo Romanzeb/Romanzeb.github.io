@@ -328,6 +328,116 @@
  
   const posts = [
     {
+  id: "golden-ticket-silver-ticket",
+  title: "Golden Ticket ve Silver Ticket — Kerberos'un Kalbine Yapılan Saldırılar",
+  date: "21 Temmuz 2026",
+  excerpt: "Active Directory ortamlarında karşılaşılan en tehlikeli ve en kalıcı saldırı tekniklerinden ikisi golden ticket ve silver ticket saldırılarıdır. Kerberos'un güven mekanizmasını hedef alan bu saldırıların ne olduğunu, neden birbirinden farklı olduğunu ve neden klasik önlemlerin işe yaramadığını anlattım.",
+  body: `
+    <p>Active Directory ortamlarında karşılaşılan en tehlikeli ve en kalıcı saldırı tekniklerinden ikisi golden ticket ve silver ticket saldırılarıdır. Bu yazıda önce çok kısaca Active Directory'nin ne olduğuna, sonra normal Kerberos akışına bakacağız, ardından bu iki saldırının tam olarak neyi hedeflediğini ve neden bu kadar tehlikeli olduğunu ele alacağız.</p>
+
+    <h2>Active Directory Nedir, Ne Değildir?</h2>
+    <p>Active Directory (AD), Microsoft'un geliştirdiği ve bir şirket ağındaki kullanıcıları, bilgisayarları, sunucuları ve bunların yetkilerini merkezi olarak yöneten bir dizin servisidir.</p>
+    <pre><code>Active Directory
+   |
+   |---- Kullanıcılar (johnsmith, admin, ...)
+   |---- Bilgisayarlar (PC'ler, sunucular)
+   |---- Gruplar (Domain Admins, IT, Muhasebe, ...)
+   |---- Politikalar (GPO — kimin neye erişebileceği)</code></pre>
+    <p>Kısaca: bir şirkette 500 çalışan varsa, her birinin kendi bilgisayarına ayrı ayrı kullanıcı açmak yerine, herkes tek bir merkezi sistemde tanımlanır. Kullanıcı hangi bilgisayarda oturum açarsa açsın aynı kullanıcı adı ve şifre ile giriş yapar, yetkileri merkezi olarak belirlenir.</p>
+    <p><strong>Ne değildir:</strong> Active Directory tek başına bir güvenlik duvarı ya da antivirüs değildir — bir kimlik ve yetki yönetim sistemidir. Kim kimdir, kim neye erişebilir sorularının cevabını tutar. Bu yazının konusu olan golden/silver ticket saldırıları da tam olarak bu kimlik doğrulama mekanizmasını — Kerberos'u — hedef alır. AD'nin güvenlik duvarını değil, "sen kimsin" diye soran ve cevaplayan çekirdek sistemini.</p>
+    <p>Domain'deki bu kimlik doğrulama işini yürüten protokol Kerberos'tur. Şimdi ona bakalım.</p>
+
+    <h2>Önce Normal Kerberos Akışını Hatırlayalım</h2>
+    <p>Normalde süreç iki aşamadan oluşur. Önce TGT alınır, sonra bu TGT kullanılarak servis ticket (TGS) alınır.</p>
+    <pre><code>1. Aşama — TGT almak:
+
+Kullanıcı
+   | kullanıcı adı + şifre
+   v
+Domain Controller (KDC)
+   | TGT verir
+   v
+krbtgt/LAB.LOCAL</code></pre>
+    <pre><code>2. Aşama — Servis ticket almak:
+
+Kullanıcı (TGT ile)
+   |
+   v
+KDC
+   | Servis Ticket (TGS) verir
+   v
+SMB / LDAP / HTTP / MSSQL</code></pre>
+    <p>Bu iki aşamayı ayırt etmek çok önemli — çünkü golden ticket ve silver ticket, tam olarak bu iki farklı aşamayı hedefler.</p>
+
+    <h2>Golden Ticket Nedir?</h2>
+    <p>Golden Ticket, TGT seviyesini hedefleyen bir tekniktir. Normalde TGT'yi kim oluşturur?</p>
+    <pre><code>Domain Controller
+        |
+     KRBTGT hesabı
+        |
+       TGT</code></pre>
+    <p>KRBTGT, Kerberos'un ana güven noktasıdır. Bunu şöyle düşün: bir ülkeye giriş için önce pasaport alıyorsun. TGT, o pasaporttur. Golden Ticket mantığında hedef şudur:</p>
+    <p><em>"Bu pasaport basma yetkisini ele geçirirsem, istediğim kimlikle geçerli görünen bir pasaport oluşturabilirim."</em></p>
+    <p>Bir saldırgan bu seviyede kontrol elde ederse, Administrator gibi, Domain Admin gibi, farklı kullanıcılar gibi görünen kimlik doğrulamalar oluşturabilir. Çünkü sorun artık tek bir servis değil, domain kimlik doğrulama zincirinin kendisidir. Pasaport basma yetkisini ele geçiren biri, artık hangi ülkeye hangi kimlikle gireceğini kendisi seçer — sınır kapısındaki hiçbir görevli bunu sorgulamaz, çünkü pasaport tamamen gerçek görünmektedir.</p>
+
+    <h2>Silver Ticket Nedir?</h2>
+    <p>Silver Ticket daha alt seviyededir. Burada hedef TGT değil, TGS yani belirli bir servise ait ticket'tır.</p>
+    <pre><code>Client
+   |
+   v
+SMB / MSSQL / HTTP / LDAP
+(tek bir servis)</code></pre>
+    <p>Bunu şöyle düşün:</p>
+    <p><strong>Golden Ticket:</strong> "Ben ülkenin pasaport basma sistemini kontrol ediyorum."</p>
+    <p><strong>Silver Ticket:</strong> "Ben sadece belirli bir binaya giriş kartı oluşturuyorum."</p>
+    <p>Saldırgan artık ülkenin tamamına giriş yetkisine sahip değil — sadece tek bir binanın güvenlik sistemini kendi başına taklit edebiliyor. Bunun için o binanın servis hesabının hash'ini ele geçirmiş olması yeterli; KDC'ye hiç ihtiyacı yok.</p>
+
+    <h2>İki Saldırı Neden Farklı Seviyelerde?</h2>
+    <p>Aradaki fark, hangi hash'in ele geçirildiğiyle doğrudan ilgili:</p>
+    <pre><code>KRBTGT hash ele geçirilirse
+        |
+        v
+   Golden Ticket
+   (tüm domain, TGT seviyesi)
+
+Servis hesabı hash'i ele geçirilirse
+        |
+        v
+   Silver Ticket
+   (tek servis, TGS seviyesi)</code></pre>
+    <p>Golden ticket'ta saldırgan KDC'nin kendisini taklit edebiliyor — çünkü elindeki hash, KDC'nin TGT üretirken kullandığı hash ile aynıdır. Silver ticket'ta ise saldırgan yalnızca hedef servisi taklit edebiliyor; KDC'ye hiç uğramadan, doğrudan o servisin kabul edeceği bir bilet üretiyor.</p>
+    <p>Bu da silver ticket'ı tespit açısından daha sinsi kılan şeydir: KDC hiç devreye girmediği için, domain controller üzerindeki Kerberos loglarında bu işlemin izi neredeyse hiç görünmez.</p>
+
+    <h2>Karşılaştırma</h2>
+    <table>
+      <thead>
+        <tr><th>Özellik</th><th>Golden Ticket</th><th>Silver Ticket</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Ele geçirilen hash</td><td>krbtgt hesabı</td><td>Hedef servis hesabı</td></tr>
+        <tr><td>Üretilen bilet</td><td>TGT</td><td>TGS</td></tr>
+        <tr><td>KDC ile etkileşim</td><td>Yok (tamamen offline)</td><td>Yok (tamamen offline)</td></tr>
+        <tr><td>Erişim kapsamı</td><td>Domain genelinde, tüm servisler</td><td>Yalnızca ilgili servis</td></tr>
+        <tr><td>Benzetme</td><td>Ülkenin pasaport otoritesini ele geçirmek</td><td>Tek bir binanın giriş kartını taklit etmek</td></tr>
+        <tr><td>Tespit zorluğu</td><td>Nispeten daha kolay</td><td>Çok daha zor</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Neden Bu Kadar Önemli?</h2>
+    <p>Her iki saldırı da klasik "şifre çalma" mantığından farklı çalışır — burada çalınan şey bir kullanıcı şifresi değil, sistemin kendisinin güvendiği bir kriptografik anahtardır. Bu da klasik önlemleri anlamsız kılar. Kullanıcıya şifre değiştirtmek, hesabı kilitlemek işe yaramaz — çünkü saldırgan tek bir kullanıcının değil, sistemin güven mekanizmasının kendisinin bir kopyasına sahiptir.</p>
+    <p>Bu yüzden savunma tarafında odak noktası da farklıdır:</p>
+    <ul>
+      <li><strong>Hash'in ele geçirilmesini zorlaştırmak:</strong> krbtgt ve servis hesaplarına erişimi kısıtlamak, AES şifreleme zorunluluğu</li>
+      <li><strong>Ele geçirilse bile etkisini kısa sürede sıfırlamak:</strong> krbtgt'nin düzenli rotasyonu, gMSA gibi otomatik rotasyonlu servis hesapları</li>
+      <li><strong>Görünürlük sağlamak:</strong> Kerberos audit policy'leri, Event ID 4768 / 4769 / 4672 loglaması</li>
+    </ul>
+    <p>Göremediğini durduramayacağın için görünürlük burada kritik. Silver ticket özellikle KDC'ye hiç uğramadığı için standart Kerberos loglarında iz bırakmaz — bu yüzden servis seviyesinde izleme ayrıca yapılandırılmalıdır.</p>
+
+    <p><em>Bu yazı eğitim ve savunma (blue team) amaçlı hazırlanmıştır. Herhangi bir sisteme yetkisiz erişim sağlamak yasa dışıdır; buradaki bilgiler yalnızca kendi kontrolünüz altındaki test ortamlarında ve savunma mekanizmalarını anlamak amacıyla kullanılmalıdır.</em></p>
+  `
+}
+    //------------------------------------------------------------------------
+    ,{
   id: "crowdstrike-next-gen-siem",
   title: "CrowdStrike Falcon Next-Gen SIEM — Modül Yapısı ve Kullanımı",
   date: "22 Temmuz 2026",
