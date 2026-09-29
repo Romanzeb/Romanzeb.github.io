@@ -3,21 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>0x52 // Blog</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>">
+<title>0x52 // Case File</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗂️</text></svg>">
 <style>
   :root{
-    --bg: #0f1115;
-    --bg-soft: #161922;
-    --line: #262b36;
-    --text: #d9dce3;
-    --text-dim: #7b8394;
-    --accent: #7fd99a;
-    --accent-dim: #4f7a5d;
+    --bg: #0b0f14;
+    --bg-soft: #131a22;
+    --line: #263340;
+    --text: #dce4ec;
+    --text-dim: #8a97a5;
+    --accent: #3d8bd4;
+    --accent-dim: #2c5c85;
+    --paper: #0e141a;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   body{
-    background:var(--bg);
+    background:
+      radial-gradient(ellipse 900px 600px at 15% -5%, rgba(61,139,212,0.08), transparent),
+      radial-gradient(ellipse 700px 500px at 100% 30%, rgba(255,255,255,0.025), transparent),
+      var(--bg);
     color:var(--text);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
     line-height:1.65;
@@ -37,10 +41,40 @@
     padding:56px 0 28px;
   }
   header .tag{
-    color:var(--accent-dim);
-    font-size:19px;
-    letter-spacing:.5px;
-    margin-bottom:10px;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    background:rgba(255,255,255,0.03);
+    color:var(--text);
+    font-weight:700;
+    font-size:14px;
+    letter-spacing:2px;
+    padding:7px 14px;
+    border:2px solid var(--accent);
+    border-radius:2px;
+    margin-bottom:16px;
+    text-transform:uppercase;
+    transform:rotate(-1deg);
+  }
+  header .tag::before{
+    content:"●";
+    color:var(--accent);
+    font-size:9px;
+    animation: blink 1.4s steps(1) infinite;
+  }
+  .cursor{
+    display:inline-block;
+    background:var(--accent-dim);
+    width:0.55em;
+    height:1em;
+    margin-left:2px;
+    vertical-align:-0.15em;
+    animation: blink 1s steps(1) infinite;
+  }
+  header .tag .cursor{background:var(--bg);}
+  @keyframes blink{
+    0%, 49%{opacity:1;}
+    50%, 100%{opacity:0;}
   }
   .about-body{
     display:none;
@@ -56,6 +90,55 @@
   .about-body p{color:var(--text); margin-bottom:6px;}
   .about-body ul{list-style:none; margin-top:6px;}
   .about-body li{color:var(--text-dim); font-size:14.5px; margin-bottom:4px;}
+
+  .dossier-block{ margin:0 0 40px; }
+  .dossier-addr{
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size:13px;
+    color:var(--accent-dim);
+    letter-spacing:1px;
+    margin-bottom:10px;
+  }
+  .dossier-addr .label{
+    color:var(--accent);
+    font-weight:700;
+    margin-left:10px;
+  }
+  .dossier-block p{color:var(--text); margin-bottom:6px; font-size:16px;}
+  .status-line{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:18px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size:13px;
+    color:var(--text-dim);
+  }
+  .status-dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:var(--accent);
+    box-shadow:0 0 6px var(--accent);
+    animation: blink 1.4s steps(1) infinite;
+  }
+  .expertise-list{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .expertise-list span{
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size:13px;
+    color:var(--accent);
+    background:var(--bg-soft);
+    border:1px solid var(--line);
+    padding:4px 10px;
+    border-radius:4px;
+  }
+  .dossier-contact{list-style:none;}
+  .dossier-contact li{margin-bottom:8px; font-size:15.5px;}
+  .dossier-contact li span{color:var(--text-dim); display:inline-block; width:90px;}
   header h1{
     font-size:33px;
     font-weight:600;
@@ -82,10 +165,15 @@
   main{padding:40px 0 80px;}
 
   .post{
-    padding:28px 0;
-    border-bottom:1px solid var(--line);
+    padding:24px;
+    margin-bottom:18px;
+    background:var(--bg-soft);
+    border:1px solid var(--line);
+    border-radius:10px;
+    transition:border-color 0.15s;
   }
-  .post:last-child{border-bottom:none;}
+  .post:hover{ border-color:var(--accent-dim); }
+  .post:last-child{margin-bottom:0;}
 
   .post-meta{
     color:var(--accent-dim);
@@ -110,6 +198,67 @@
     margin-top:10px;
     font-size:17px;
   }
+
+  .post-meta .dot{
+    margin:0 8px;
+    color:var(--line);
+  }
+  .tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin:10px 0 4px;
+  }
+  .tag-badge{
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size:12.5px;
+    color:var(--accent);
+    background:var(--bg-soft);
+    border:1px solid var(--line);
+    padding:3px 9px;
+    border-radius:4px;
+    letter-spacing:.3px;
+  }
+  .post-body .tags{margin:0 0 20px;}
+
+  .list-heading{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-bottom:8px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:14px;
+  }
+  .list-heading .cmd{
+    color:var(--accent-dim);
+    font-size:14px;
+    letter-spacing:.5px;
+  }
+  .case-no{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size:12.5px;
+    color:var(--text-dim);
+    letter-spacing:1px;
+    margin-bottom:10px;
+  }
+  .post-body .case-no{margin-bottom:16px;}
+  .sev{
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.5px;
+    text-transform:uppercase;
+    padding:2px 8px;
+    border-radius:3px;
+    border:1px solid currentColor;
+  }
+  .sev-critical{ color:#ff5c4d; }
+  .sev-high{ color:#ff9d4d; }
+  .sev-medium{ color:#e2c04d; }
+  .sev-info{ color:#7ba8c9; }
 
   footer{
     border-top:1px solid var(--line);
@@ -196,6 +345,33 @@
     border-color: var(--accent-dim);
   }
 
+  #side-links{
+    position: fixed;
+    left: 28px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    z-index: 40;
+  }
+  #side-links a{
+    color: var(--text-dim);
+    display: flex;
+    transition: color 0.15s;
+  }
+  #side-links a:hover{ color: var(--accent); }
+  #side-links a svg{ width: 19px; height: 19px; }
+  #side-links .side-line{
+    width: 1px;
+    height: 50px;
+    background: var(--line);
+  }
+  @media (max-width: 1180px){
+    #side-links{ display: none; }
+  }
+
   #bg-canvas{
     position: fixed;
     top: 0;
@@ -219,14 +395,26 @@
 
 <canvas id="bg-canvas"></canvas>
 
+<div id="side-links">
+  <a href="https://github.com/Romanzeb" target="_blank" rel="noopener" title="GitHub">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.09 3.3 9.4 7.88 10.93.58.11.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.04-.72.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.75 2.7 1.25 3.36.96.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.25.45-2.28 1.19-3.08-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.64 1.59.24 2.76.12 3.05.74.8 1.18 1.83 1.18 3.08 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.06.78 2.15 0 1.55-.01 2.8-.01 3.18 0 .32.21.68.8.56A10.52 10.52 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z"/></svg>
+  </a>
+  <a href="https://www.linkedin.com/in/roman-zeb" target="_blank" rel="noopener" title="LinkedIn">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM.5 8.98h8.96V23.5H.5V8.98ZM8.98 8.98h8.59v1.98h.12c.6-1.08 2.06-2.22 4.24-2.22 4.53 0 5.37 2.87 5.37 6.6v7.16h-8.96v-6.35c0-1.52-.03-3.47-2.12-3.47-2.12 0-2.45 1.65-2.45 3.36v6.46H8.98V8.98Z"/></svg>
+  </a>
+  <div class="side-line"></div>
+  <a href="mailto:romanzeb@proton.me" title="Mail">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 5.5h20v13H2v-13Z"/><path d="m2 6 10 7 10-7"/></svg>
+  </a>
+</div>
+
 <div class="wrap">
   <header>
-    <div class="tag">$ whoami</div>
-    <h1 id="site-title">0x52<span>//</span>Blog</h1>
+    <div class="tag">FILE № 0x52 — ACTIVE</div>
     <p id="site-desc">Siber güvenlik alanındaki öğrendiklerimi ve ilgimi çeken konuları paylaştığım kişisel bir platform.</p>
     <nav>
-      <a href="#" class="active" onclick="showList(); return false;" id="nav-posts">Yazılar</a>
-      <a href="#" onclick="showAbout(); return false;" id="nav-about">Hakkımda</a>
+      <a href="#" class="active" onclick="showList(); return false;" id="nav-posts">EVIDENCE LOG</a>
+      <a href="#" onclick="showAbout(); return false;" id="nav-about">SUBJECT PROFILE</a>
     </nav>
   </header>
 
@@ -238,23 +426,52 @@
 
    
     <div id="about" class="about-body">
-      <h2>Blog İçeriği</h2>
-      <p>Genel siber güvenlik konuları üzerine yazılar paylaşıyorum. Ağırlıklı olarak SOC (Security Operations Center) tarafında çalıştığım için tehdit tespiti ve olay müdahalesi ile ilgili gözlemlerim de sık sık burada yer alacak.</p>
+      <div class="status-line"><span class="status-dot"></span>SUBJECT ACTIVE · CLEARANCE: BLUE TEAM / SOC</div>
 
-      <h2>Hakkımda</h2>
-      <p>Merhaba! Ben Roman Siber güvenlik alanında sürekli öğrenmeye, araştırmaya ve kendimi geliştirmeye Çalışıyorum.</p>
+      <div class="dossier-block">
+        <div class="dossier-addr">0x00000000 <span class="label">IDENTITY</span></div>
+        <p>0x52 — eski red team, şimdi blue team / SOC tarafında çalışan bir siber güvenlik meraklısı.</p>
+      </div>
 
-      <h2>İletişim</h2>
-      <ul>
-        <li>Mail: <a href="mailto:romanzeb@proton.me">romanzeb@proton.me</a></li>
-        <li>LinkedIn: <a href="https://www.linkedin.com/in/roman-zeb" target="_blank" rel="noopener">linkedin.com/in/roman-zeb</a></li>
-      </ul>
+      <div class="dossier-block">
+        <div class="dossier-addr">0x00000040 <span class="label">BACKGROUND</span></div>
+        <p>Bilgisayar mühendisliği mezunuyum. Yolculuğum saldırı tarafında başladı — red team perspektifiyle sistemlerin nasıl kırıldığını, hangi zafiyetlerin gerçekten istismar edilebilir olduğunu öğrendim. Bu deneyim bana saldırganın nasıl düşündüğünü gösterdi.</p>
+        <p>Zamanla ilgim savunma tarafına kaydı: kırmak yerine, o kırılma anını yakalamak, durdurmak ve bir daha olmasını engellemek beni daha çok tatmin etmeye başladı. Bugün blue team / SOC tarafında çalışıyorum — ama red team geçmişim, tespit kuralları yazarken saldırganın bir sonraki hamlesini tahmin etmemi kolaylaştırıyor.</p>
+      </div>
+
+      <div class="dossier-block">
+        <div class="dossier-addr">0x00000080 <span class="label">EXPERTISE</span></div>
+        <div class="expertise-list">
+          <span style="color:#4ade80; border-color:#4ade80;">Threat Detection</span>
+          <span style="color:#f0a020; border-color:#f0a020;">Incident Response</span>
+          <span style="color:#3d8bd4; border-color:#3d8bd4;">SOC Operations</span>
+          <span style="color:#f0a020; border-color:#f0a020;">YARA Rule Development</span>
+          <span style="color:#a78bfa; border-color:#a78bfa;">MITRE ATT&CK</span>
+          <span style="color:#2dd4bf; border-color:#2dd4bf;">SIEM</span>
+          <span style="color:#e05a9c; border-color:#e05a9c;">Active Directory Security</span>
+          <span style="color:#eab308; border-color:#eab308;">Kerberos Attack Analysis</span>
+          <span style="color:#2dd4bf; border-color:#2dd4bf;">Network Forensics</span>
+          <span style="color:#4ade80; border-color:#4ade80;">Detection Engineering</span>
+          <span style="color:#e2483c; border-color:#e2483c;">Red Team Operations</span>
+          <span style="color:#e2483c; border-color:#e2483c;">Adversary Simulation</span>
+          <span style="color:#e2483c; border-color:#e2483c;">Penetration Testing</span>
+        </div>
+      </div>
+
+      <div class="dossier-block">
+        <div class="dossier-addr">0x000000C0 <span class="label">CONTACT</span></div>
+        <ul class="dossier-contact">
+          <li><span>Mail</span><a href="mailto:romanzeb@proton.me">romanzeb@proton.me</a></li>
+          <li><span>LinkedIn</span><a href="https://www.linkedin.com/in/roman-zeb" target="_blank" rel="noopener">linkedin.com/in/roman-zeb</a></li>
+          <li><span>GitHub</span><a href="https://github.com/Romanzeb" target="_blank" rel="noopener">github.com/Romanzeb</a></li>
+        </ul>
+      </div>
     </div>
   </main>
 
   <footer>
-    <span>© 2026 0x52</span>
-    <span>github.com/Romanzeb</span>  
+    <span>© 2026 0x52 │ file remains open.</span>
+    <span>github.com/Romanzeb</span>
   </footer>
 
   <button id="back-to-top" onclick="window.scrollTo({top:0, behavior:'smooth'})" title="Yukarı çık">↑</button>
@@ -302,7 +519,7 @@
         const dy = particles[i].y - particles[j].y;
         const dist = Math.sqrt(dx*dx + dy*dy);
         if(dist < 130){
-          ctx.strokeStyle = `rgba(127, 217, 154, ${1 - dist/130})`;
+          ctx.strokeStyle = `rgba(61, 139, 212, ${1 - dist/130})`;
           ctx.lineWidth = 0.6;
           ctx.beginPath();
           ctx.moveTo(particles[i].x, particles[i].y);
@@ -310,7 +527,7 @@
           ctx.stroke();
         }
       }
-      ctx.fillStyle = 'rgba(127, 217, 154, 0.8)';
+      ctx.fillStyle = 'rgba(61, 139, 212, 0.8)';
       ctx.beginPath();
       ctx.arc(particles[i].x, particles[i].y, 1.6, 0, Math.PI * 2);
       ctx.fill();
@@ -318,8 +535,8 @@
     animId = requestAnimationFrame(drawParticles);
   }
 
-  function startBgAnimation(){
-    canvas.style.opacity = '0.35';
+  function startBgAnimation(opacity){
+    canvas.style.opacity = opacity || '0.35';
     if(!animId) drawParticles();
   }
   function stopBgAnimation(){
@@ -332,6 +549,8 @@
   title: "Golden Ticket ve Silver Ticket — Kerberos'e Yapılan Saldırılar",
   date: "05 Ağustos 2026",
   excerpt: "Active Directory ortamlarında karşılaşılan en tehlikeli ve en kalıcı saldırı tekniklerinden ikisi golden ticket ve silver ticket saldırılarıdır. Kerberos'un güven mekanizmasını hedef alan bu saldırıların ne olduğunu, neden birbirinden farklı olduğunu ve neden klasik önlemlerin işe yaramadığını anlattım.",
+  tags: ["Active Directory", "Kerberos", "Red Team"],
+  severity: "critical",
   body: `
     <img src="images/AD.png" alt="CS Diagramı" style="width:100%; background:#000000; padding:24px; border-radius:12px; margin:0 0 20px; display:block;">
     <h2>1. Giriş</h2>
@@ -465,6 +684,8 @@ Servis hesabı hash'i ele geçirilirse
   title: "CrowdStrike Falcon Next-Gen SIEM — Modül Yapısı ve Kullanımı",
   date: "22 Temmuz 2026",
   excerpt: "Geleneksel SIEM'ler log toplar, indeksler ve arama yapar. Ama modern saldırılar bu döngünün çok ötesine geçti. Bu yazıda CrowdStrike Falcon Next-Gen SIEM'in ana bölümlerini, her menünün ne işe yaradığını ve SOC perspektifinden nasıl kullanıldığını anlatıyorum.",
+  tags: ["SIEM", "CrowdStrike", "Blue Team"],
+  severity: "info",
   body: `
     <img src="images/csn.jpg" alt="CS Diagramı" style="width:100%; background:#ffffff; padding:24px; border-radius:12px; margin:0 0 20px; display:block;">
     <h2>1. Giriş</h2>
@@ -615,6 +836,8 @@ Servis hesabı hash'i ele geçirilirse
   title: "YARA ile Tehdit Tespiti — MITRE ATT&CK Tekniklerine ve LOLBins'e Özel Kurallar",
   date: "16 Temmuz 2026",
   excerpt: "Bir dosya sisteminize düşüyor. AV sessiz. EDR alarm vermiyor. İşte tam bu noktada YARA devreye giriyor. 8 farklı MITRE ATT&CK tekniği için yazdığım YARA kurallarını ve arkasındaki mantığı adım adım açıklıyorum.",
+  tags: ["YARA", "MITRE ATT&CK", "Detection Engineering"],
+  severity: "high",
   body: `
     <img src="images/YARA.jpg" alt="YARA Diagramı" style="width:100%; background:#ffffff; padding:24px; border-radius:12px; margin:0 0 20px; display:block;">
     <h2>1. Giriş</h2>
@@ -896,6 +1119,8 @@ mshta.exe javascript:alert("Test");close()</code></pre>
   title: "Görünmeyen Üçüncü Kişi Man-in-the-Middle (MITM) Saldırıları",
   date: "13 Ocak 2026",
   excerpt: "MITM saldırılarının gerçekleşme kriterleri, saldırı türleri, tespit yöntemleri ve alınabilecek önlemler üzerine bir inceleme.",
+  tags: ["Network Security", "Blue Team"],
+  severity: "medium",
   body: `
     <img src="images/MITM.png" alt="MITM saldırı diyagramı" style="width:100%; background:#ffffff; padding:24px; border-radius:12px; margin:0 0 20px; display:block;">
 
@@ -1014,12 +1239,51 @@ mshta.exe javascript:alert("Test");close()</code></pre>
     backToTop.style.display = window.scrollY > 400 ? 'flex' : 'none';
   });
 
+  const tagPalette = ['#3d8bd4', '#e2483c', '#2dd4bf', '#f0a020', '#a78bfa', '#4ade80', '#e05a9c', '#eab308'];
+  const tagColorOverrides = {
+    'crowdstrike': '#e2483c',
+    'mitre att&ck': '#a78bfa',
+    'siem': '#2dd4bf',
+    'yara': '#f0a020',
+    'kerberos': '#eab308',
+    'active directory': '#e05a9c',
+    'red team': '#e2483c',
+    'red team operations': '#e2483c',
+    'adversary simulation': '#e2483c',
+    'penetration testing': '#e2483c',
+    'blue team': '#3d8bd4',
+    'detection engineering': '#4ade80',
+    'network security': '#3d8bd4',
+    'threat detection': '#4ade80',
+    'incident response': '#f0a020',
+    'soc operations': '#3d8bd4',
+    'network forensics': '#2dd4bf'
+  };
+  function tagColor(tag){
+    const key = tag.toLowerCase();
+    if(tagColorOverrides[key]) return tagColorOverrides[key];
+    let hash = 0;
+    for(let i = 0; i < key.length; i++) hash = (hash * 31 + key.charCodeAt(i)) >>> 0;
+    return tagPalette[hash % tagPalette.length];
+  }
+
+  function tagsHtml(tags){
+    if(!tags || !tags.length) return '';
+    return `<div class="tags">${tags.map(t => `<span class="tag-badge" style="color:${tagColor(t)}; border-color:${tagColor(t)};">${t}</span>`).join('')}</div>`;
+  }
+
   function renderList(){
-    listEl.innerHTML = posts.map(p => `
+    listEl.innerHTML = `
+      <div class="list-heading">
+        <span class="cmd">EVIDENCE LOG</span>
+      </div>
+    ` + posts.map((p, i) => `
       <article class="post">
+        <div class="case-no">CASE-${String(posts.length - i).padStart(3,'0')}<span class="sev sev-${p.severity}">${p.severity}</span></div>
         <div class="post-meta">${p.date}</div>
         <h2><a href="#${p.id}" onclick="showPost('${p.id}'); return false;">${p.title}</a></h2>
         <p class="excerpt">${p.excerpt}</p>
+        ${tagsHtml(p.tags)}
         <a class="read-more" href="#${p.id}" onclick="showPost('${p.id}'); return false;">Devamını oku →</a>
       </article>
     `).join('');
@@ -1028,14 +1292,16 @@ mshta.exe javascript:alert("Test");close()</code></pre>
   function showPost(id){
     const p = posts.find(x => x.id === id);
     if(!p) return showList();
-    stopBgAnimation();
+    startBgAnimation('0.15');
     listEl.style.display = 'none';
     aboutEl.classList.remove('open');
     detailEl.classList.add('open');
     detailEl.innerHTML = `
-      <a class="back-link" href="#" onclick="showList(); return false;">← Tüm Yazılar</a>
+      <a class="back-link" href="#" onclick="showList(); return false;">← Tüm Kayıtlar</a>
+      <div class="case-no">CASE-${String(posts.findIndex(x=>x.id===id)>=0 ? posts.length - posts.findIndex(x=>x.id===id) : 1).padStart(3,'0')}<span class="sev sev-${p.severity}">${p.severity}</span></div>
       <h1>${p.title}</h1>
       <div class="post-meta">${p.date}</div>
+      ${tagsHtml(p.tags)}
       ${p.body}
     `;
     window.scrollTo(0,0);
@@ -1080,14 +1346,16 @@ mshta.exe javascript:alert("Test");close()</code></pre>
   } else if(hash){
     const p = posts.find(x => x.id === hash);
     if(p){
-      stopBgAnimation();
+      startBgAnimation('0.15');
       listEl.style.display = 'none';
       aboutEl.classList.remove('open');
       detailEl.classList.add('open');
       detailEl.innerHTML = `
-        <a class="back-link" href="#" onclick="showList(); return false;">← tüm yazılar</a>
+        <a class="back-link" href="#" onclick="showList(); return false;">← tüm kayıtlar</a>
+        <div class="case-no">CASE-${String(posts.length - posts.findIndex(x=>x.id===hash)).padStart(3,'0')}<span class="sev sev-${p.severity}">${p.severity}</span></div>
         <h1>${p.title}</h1>
         <div class="post-meta">${p.date}</div>
+        ${tagsHtml(p.tags)}
         ${p.body}
       `;
     }
