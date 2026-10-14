@@ -10,7 +10,7 @@
     <img src="images/alert-ozet.svg" alt="Alert özeti diyagramı">
 
     <h2>Arka Plan</h2>
-    <p>Bu yazı, staj sürecimde karşılaştığım ve analiz ettiğim gerçek bir Cortex XDR alert'ine dayanmaktadır. Şirket ve kullanıcı bilgileri anonimleştirilmiştir. Amacım hem kendi öğrenme sürecimi belgelemek hem de benzer bir alert'le karşılaşacak kişilere bir referans noktası sunmak.</p>
+    <p>Bu yazı, MDR operasyonunda incelediğim gerçek bir Cortex XDR alert'ine dayanmaktadır. Müşteri ve kullanıcı bilgileri anonimleştirilmiştir. Amacım hem analiz sürecimi belgelemek hem de benzer bir alert'le karşılaşacak analistlere bir referans noktası sunmak.</p>
 
     <h2>Alert Özeti</h2>
     <p>Cortex XDR, iç ağda bir sunucu hesabından kaynaklanan yoğun NTLM kimlik doğrulama başarısızlıkları tespit etti. Alert detayları:</p>
