@@ -58,7 +58,7 @@
     <p>Bir servis hesabı normalde önceden tanımlanmış kaynaklara, belirli portlara ve protokollere ihtiyaç duyar. Behavioral baseline olmadan bu soruyu cevaplayamazsınız. İyi bir SIEM kurulumunda her hesabın "normal" trafiği zaman içinde öğrenilir ve sapmalar otomatik olarak flaglenir.</p>
     <p>Bu case'de servis hesabının FILESERVER01'e NTLM ile bağlanması alışılmadık bir durumdu — normalde bu hesap farklı bir protokol ve farklı bir hedef kullanıyordu. Bu sapma alert'i tetikledi.</p>
 
-    <h2>Sonuç ve Öğrenilen Dersler</h2>
+    <h2>Çıkarımlar</h2>
     <p>Bu alert'in analizi birkaç önemli dersi beraberinde getirdi:</p>
     <ul>
       <li>Servis hesapları düzenli olarak denetlenmeli, minimum yetki prensibiyle çalışmalı</li>
@@ -66,7 +66,7 @@
       <li>Lateral movement tespiti için hem kaynak hem hedef tarafında log korelasyonu şart</li>
       <li>False positive ile gerçek tehdit arasındaki fark çoğu zaman context'te gizli: hesabın geçmiş davranışı, hedef sistemin değeri, olay zamanlaması</li>
     </ul>
-    <p>Her alert bir hikaye anlatır. Analistin görevi, o hikayenin ne anlama geldiğini çözmektir.</p>
+    <p class="closing">Her alert bir hikaye anlatır.<br><span>Analistin görevi, o hikayenin ne anlama geldiğini çözmektir.</span></p>
   `
   },
    {

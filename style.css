@@ -379,3 +379,20 @@
     header{padding:40px 0 24px;}
     header h1{font-size:27px;}
   }
+
+.post-body p.closing{
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size:24px;
+  font-weight:700;
+  font-style:italic;
+  color:var(--accent);
+  border-left:3px solid var(--accent);
+  padding:6px 0 6px 20px;
+  margin:36px 0 0;
+  line-height:1.5;
+}
+.post-body p.closing span{
+  font-size:18px;
+  font-weight:400;
+  color:var(--text-dim);
+}
