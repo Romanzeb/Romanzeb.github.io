@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 300" font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif">
+<rect width="900" height="300" fill="#0e141a"/>
+<text x="30" y="40" fill="#8a97a5" font-size="15" letter-spacing="2">ALERT ÖZETİ</text>
+<rect x="30" y="70" width="240" height="120" rx="10" fill="#131a22" stroke="#3d8bd4" stroke-width="2"/>
+<text x="150" y="108" text-anchor="middle" fill="#8a97a5" font-size="14">KAYNAK</text>
+<text x="150" y="140" text-anchor="middle" fill="#dce4ec" font-size="20" font-weight="600">Servis Hesabı</text>
+<text x="150" y="168" text-anchor="middle" fill="#8a97a5" font-size="14">domain\servisHesabi</text>
+<line x1="270" y1="130" x2="620" y2="130" stroke="#e2483c" stroke-width="3" stroke-dasharray="8 6"/>
+<polygon points="620,120 640,130 620,140" fill="#e2483c"/>
+<rect x="335" y="92" width="220" height="76" rx="8" fill="#0e141a" stroke="#e2483c"/>
+<text x="445" y="124" text-anchor="middle" fill="#ff5c4d" font-size="26" font-weight="700">145 başarısız</text>
+<text x="445" y="152" text-anchor="middle" fill="#dce4ec" font-size="15">NTLM auth · 58 saniye</text>
+<rect x="640" y="70" width="230" height="120" rx="10" fill="#131a22" stroke="#3d8bd4" stroke-width="2"/>
+<text x="755" y="108" text-anchor="middle" fill="#8a97a5" font-size="14">HEDEF</text>
+<text x="755" y="140" text-anchor="middle" fill="#dce4ec" font-size="20" font-weight="600">Dosya Sunucusu</text>
+<text x="755" y="168" text-anchor="middle" fill="#8a97a5" font-size="14">FILESERVER01</text>
+<rect x="30" y="225" width="215" height="34" rx="4" fill="none" stroke="#a78bfa"/>
+<text x="137" y="247" text-anchor="middle" fill="#a78bfa" font-size="14">TA0006 · Credential Access</text>
+<rect x="260" y="225" width="165" height="34" rx="4" fill="none" stroke="#a78bfa"/>
+<text x="342" y="247" text-anchor="middle" fill="#a78bfa" font-size="14">T1110 · Brute Force</text>
+<rect x="440" y="225" width="120" height="34" rx="4" fill="none" stroke="#f0a020"/>
+<text x="500" y="247" text-anchor="middle" fill="#f0a020" font-size="14">Cortex XDR</text>
+<rect x="575" y="225" width="150" height="34" rx="4" fill="none" stroke="#2dd4bf"/>
+<text x="650" y="247" text-anchor="middle" fill="#2dd4bf" font-size="14">≈ 2.5 deneme/sn</text>
+</svg>

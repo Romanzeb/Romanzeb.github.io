@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif">
+<defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#3d8bd4"/></marker></defs>
+<rect width="900" height="420" fill="#0e141a"/>
+<text x="30" y="38" fill="#8a97a5" font-size="15" letter-spacing="2">NTLM CHALLENGE-RESPONSE AKIŞI</text>
+<rect x="60" y="60" width="180" height="46" rx="8" fill="#131a22" stroke="#3d8bd4" stroke-width="2"/>
+<text x="150" y="89" text-anchor="middle" fill="#dce4ec" font-size="17" font-weight="600">İstemci</text>
+<rect x="660" y="60" width="180" height="46" rx="8" fill="#131a22" stroke="#3d8bd4" stroke-width="2"/>
+<text x="750" y="89" text-anchor="middle" fill="#dce4ec" font-size="17" font-weight="600">Sunucu</text>
+<line x1="150" y1="106" x2="150" y2="390" stroke="#263340" stroke-width="2"/>
+<line x1="750" y1="106" x2="750" y2="390" stroke="#263340" stroke-width="2"/>
+<line x1="150" y1="150" x2="745" y2="150" stroke="#3d8bd4" stroke-width="2" marker-end="url(#a)"/>
+<text x="450" y="140" text-anchor="middle" fill="#dce4ec" font-size="15">1. NEGOTIATE — kimlik doğrulama isteği</text>
+<line x1="750" y1="215" x2="155" y2="215" stroke="#3d8bd4" stroke-width="2" marker-end="url(#a)"/>
+<text x="450" y="205" text-anchor="middle" fill="#dce4ec" font-size="15">2. CHALLENGE — sunucu rastgele nonce gönderir</text>
+<line x1="150" y1="280" x2="745" y2="280" stroke="#3d8bd4" stroke-width="2" marker-end="url(#a)"/>
+<text x="450" y="270" text-anchor="middle" fill="#dce4ec" font-size="15">3. AUTHENTICATE — nonce, parola hash'i ile şifrelenip döner</text>
+<line x1="750" y1="345" x2="155" y2="345" stroke="#3d8bd4" stroke-width="2" marker-end="url(#a)"/>
+<text x="450" y="335" text-anchor="middle" fill="#dce4ec" font-size="15">4. Domain Controller doğrular → erişim ver / reddet</text>
+<rect x="280" y="360" width="140" height="30" rx="4" fill="none" stroke="#e2483c"/>
+<text x="350" y="380" text-anchor="middle" fill="#ff5c4d" font-size="13">Pass-the-Hash</text>
+<rect x="440" y="360" width="140" height="30" rx="4" fill="none" stroke="#e2483c"/>
+<text x="510" y="380" text-anchor="middle" fill="#ff5c4d" font-size="13">NTLM Relay</text>
+<rect x="600" y="360" width="140" height="30" rx="4" fill="none" stroke="#e2483c"/>
+<text x="670" y="380" text-anchor="middle" fill="#ff5c4d" font-size="13">Brute Force</text>
+</svg>

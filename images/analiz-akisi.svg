@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 260" font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif">
+<defs><marker id="b" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#3d8bd4"/></marker></defs>
+<rect width="900" height="260" fill="#0e141a"/>
+<text x="30" y="38" fill="#8a97a5" font-size="15" letter-spacing="2">ANALİZ AKIŞI</text>
+<g font-size="16" text-anchor="middle">
+<rect x="30" y="70" width="180" height="90" rx="10" fill="#131a22" stroke="#3d8bd4" stroke-width="2"/>
+<text x="120" y="102" fill="#3d8bd4" font-size="13">ADIM 1</text><text x="120" y="130" fill="#dce4ec" font-weight="600">Zaman</text><text x="120" y="150" fill="#8a97a5" font-size="13">çizelgesi</text>
+<rect x="250" y="70" width="180" height="90" rx="10" fill="#131a22" stroke="#3d8bd4" stroke-width="2"/>
+<text x="340" y="102" fill="#3d8bd4" font-size="13">ADIM 2</text><text x="340" y="130" fill="#dce4ec" font-weight="600">Kaynak hesap</text><text x="340" y="150" fill="#8a97a5" font-size="13">davranış geçmişi</text>
+<rect x="470" y="70" width="180" height="90" rx="10" fill="#131a22" stroke="#3d8bd4" stroke-width="2"/>
+<text x="560" y="102" fill="#3d8bd4" font-size="13">ADIM 3</text><text x="560" y="130" fill="#dce4ec" font-weight="600">Hedef sistem</text><text x="560" y="150" fill="#8a97a5" font-size="13">değeri, başarılı giriş?</text>
+<rect x="690" y="70" width="180" height="90" rx="10" fill="#131a22" stroke="#3d8bd4" stroke-width="2"/>
+<text x="780" y="102" fill="#3d8bd4" font-size="13">ADIM 4</text><text x="780" y="130" fill="#dce4ec" font-weight="600">Ağ trafiği</text><text x="780" y="150" fill="#8a97a5" font-size="13">lateral movement?</text>
+</g>
+<line x1="210" y1="115" x2="246" y2="115" stroke="#3d8bd4" stroke-width="2" marker-end="url(#b)"/>
+<line x1="430" y1="115" x2="466" y2="115" stroke="#3d8bd4" stroke-width="2" marker-end="url(#b)"/>
+<line x1="650" y1="115" x2="686" y2="115" stroke="#3d8bd4" stroke-width="2" marker-end="url(#b)"/>
+<line x1="450" y1="160" x2="450" y2="190" stroke="#263340" stroke-width="2"/>
+<rect x="190" y="190" width="240" height="44" rx="8" fill="none" stroke="#4ade80"/>
+<text x="310" y="217" text-anchor="middle" fill="#4ade80" font-size="15">Meşru uygulama → False Positive</text>
+<rect x="470" y="190" width="240" height="44" rx="8" fill="none" stroke="#ff5c4d"/>
+<text x="590" y="217" text-anchor="middle" fill="#ff5c4d" font-size="15">Anomali → Escalation</text>
+<line x1="450" y1="190" x2="310" y2="190" stroke="#263340" stroke-width="2"/>
+<line x1="450" y1="190" x2="590" y2="190" stroke="#263340" stroke-width="2"/>
+</svg>

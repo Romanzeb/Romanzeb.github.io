@@ -1,4 +1,74 @@
   const posts = [
+  {
+    id: "alert-ntlm-bruteforce",
+    title: "Alert Analizi #1 — İç Ağda NTLM Brute Force Tespiti",
+    date: "14 Ekim 2026",
+    excerpt: "Kurumsal ağda bir servis hesabından 58 saniye içinde 145 başarısız NTLM kimlik doğrulama denemesi. Cortex XDR alarmını nasıl analiz ettik, ne bulduk, ne öğrendik.",
+    tags: ["Incident Response", "SOC Operations", "Active Directory"],
+    severity: "high",
+    body: `
+    <img src="images/alert-ozet.svg" alt="Alert özeti diyagramı">
+
+    <h2>Arka Plan</h2>
+    <p>Bu yazı, staj sürecimde karşılaştığım ve analiz ettiğim gerçek bir Cortex XDR alert'ine dayanmaktadır. Şirket ve kullanıcı bilgileri anonimleştirilmiştir. Amacım hem kendi öğrenme sürecimi belgelemek hem de benzer bir alert'le karşılaşacak kişilere bir referans noktası sunmak.</p>
+
+    <h2>Alert Özeti</h2>
+    <p>Cortex XDR, iç ağda bir sunucu hesabından kaynaklanan yoğun NTLM kimlik doğrulama başarısızlıkları tespit etti. Alert detayları:</p>
+    <ul>
+      <li><strong>Kaynak hesap:</strong> Bir domain servis hesabı (domain\\servisHesabi)</li>
+      <li><strong>Hedef:</strong> Dosya sunucusu (FILESERVER01)</li>
+      <li><strong>Süre:</strong> 58 saniye</li>
+      <li><strong>Deneme sayısı:</strong> 145 başarısız NTLM authentication</li>
+      <li><strong>MITRE ATT&CK:</strong> TA0006 (Credential Access) / T1110 (Brute Force)</li>
+    </ul>
+
+    <h2>İlk Değerlendirme: Gerçek mi, False Positive mi?</h2>
+    <p>İlk soru her zaman şu olmalı: <em>Bu bir saldırı mı, yoksa meşru bir uygulamanın yanlış davranışı mı?</em></p>
+    <p>145 deneme / 58 saniye = saniyede yaklaşık 2.5 istek. Bu oran insan eliyle yapılabilecek bir şey değil, ama aynı zamanda özellikle agresif bir brute force aracının da altında kalıyor. Otomatik bir script veya yanlış yapılandırılmış bir servis olabilir.</p>
+    <p>Kaynak hesabın bir <strong>servis hesabı</strong> olması dikkat çekici. Servis hesapları normalde belirli kaynaklarla konuşur ve başarısız auth denemeleri üretmez. Eğer gerçekten compromise edilmişse, saldırgan bu hesabı lateral movement için kullanıyor olabilir.</p>
+
+    <h2>NTLM Neden Önemli?</h2>
+    <p>NTLM (NT LAN Manager), Microsoft'un eski kimlik doğrulama protokolüdür. Kerberos'un aksine bir challenge-response mekanizması kullanır ve bu yapı onu birkaç saldırı vektörüne açık kılar:</p>
+    <img src="images/ntlm-akis.svg" alt="NTLM challenge-response akışı">
+    <ul>
+      <li><strong>Pass-the-Hash:</strong> Parola yerine hash kullanılarak kimlik doğrulama yapılabilir</li>
+      <li><strong>NTLM Relay:</strong> Authentication trafiği yakalanıp başka bir hedefe yönlendirilebilir</li>
+      <li><strong>Brute Force:</strong> Hash değerleri offline kırılabilir veya online deneme yapılabilir</li>
+    </ul>
+    <p>Modern ortamlarda Kerberos tercih edilmeli ve NTLM devre dışı bırakılmalı veya kısıtlanmalıdır. Ama çoğu kurumsal ağda NTLM hâlâ aktif — çünkü eski sistemler, legacy uygulamalar veya yanlış yapılandırmalar buna ihtiyaç duyuyor.</p>
+
+    <h2>Analiz Adımları</h2>
+    <p>Alert'i aldıktan sonra izlediğim adımlar:</p>
+    <img src="images/analiz-akisi.svg" alt="Analiz akışı">
+
+    <h3>1. Zaman çizelgesini incele</h3>
+    <p>145 deneme tam olarak hangi zaman aralığına sığıyor? Başlangıç ve bitiş saati önemli. Mesai saatleri dışında mı olmuş? Gece 3'te başlayan bir brute force ile sabah 9'da başlayan biri farklı risk profillerine sahip.</p>
+
+    <h3>2. Kaynak hesabı sorgula</h3>
+    <p>Hesap son ne zaman kullanılmış? Normal davranış profili nedir? Başka sistemlere de benzer denemeler yapmış mı? Active Directory logları ve SIEM'deki geçmiş eventlar burada kritik.</p>
+
+    <h3>3. Hedef sistemi değerlendir</h3>
+    <p>FILESERVER01, yüksek değerli bir hedef. Üzerinde ne tür veriler var? Başarılı bir kimlik doğrulama olmuş mu (sonrasında)? Eğer brute force başarılı olduysa ve ardından dosya erişimi varsa, bu artık Credential Access + Collection kombinasyonu demektir.</p>
+
+    <h3>4. Ağ trafiğini kontrol et</h3>
+    <p>Kaynak IP'den başka nereye trafik gidiyordu? Lateral movement'ın en belirgin işareti, bir makinenin normalde iletişim kurmadığı sistemlerle aniden konuşmaya başlamasıdır.</p>
+
+    <h2>Behavioral Baseline: Normalin Dışına Çıkmak</h2>
+    <p>Güvenlik analizinin temel sorusu şu: <em>Bu sistem normalde böyle mi davranır?</em></p>
+    <p>Bir servis hesabı normalde önceden tanımlanmış kaynaklara, belirli portlara ve protokollere ihtiyaç duyar. Behavioral baseline olmadan bu soruyu cevaplayamazsınız. İyi bir SIEM kurulumunda her hesabın "normal" trafiği zaman içinde öğrenilir ve sapmalar otomatik olarak flaglenir.</p>
+    <p>Bu case'de servis hesabının FILESERVER01'e NTLM ile bağlanması alışılmadık bir durumdu — normalde bu hesap farklı bir protokol ve farklı bir hedef kullanıyordu. Bu sapma alert'i tetikledi.</p>
+
+    <h2>Sonuç ve Öğrenilen Dersler</h2>
+    <p>Bu alert'in analizi birkaç önemli dersi beraberinde getirdi:</p>
+    <ul>
+      <li>Servis hesapları düzenli olarak denetlenmeli, minimum yetki prensibiyle çalışmalı</li>
+      <li>NTLM kullanımı ortamda loglanmalı ve anormallikler için alarm kurulmalı</li>
+      <li>Lateral movement tespiti için hem kaynak hem hedef tarafında log korelasyonu şart</li>
+      <li>False positive ile gerçek tehdit arasındaki fark çoğu zaman context'te gizli: hesabın geçmiş davranışı, hedef sistemin değeri, olay zamanlaması</li>
+    </ul>
+    <p>Her alert bir hikaye anlatır. Analistin görevi, o hikayenin ne anlama geldiğini çözmektir.</p>
+  `
+  },
    {
   id: "golden-ticket-silver-ticket",
   title: "Golden Ticket ve Silver Ticket — Kerberos'e Yapılan Saldırılar",
