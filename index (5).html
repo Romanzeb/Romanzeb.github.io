@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>0x52 // Case File</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<div id="side-links">
+  <a href="https://github.com/Romanzeb" target="_blank" rel="noopener" title="GitHub">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.09 3.3 9.4 7.88 10.93.58.11.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.04-.72.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.75 2.7 1.25 3.36.96.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.25.45-2.28 1.19-3.08-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.64 1.59.24 2.76.12 3.05.74.8 1.18 1.83 1.18 3.08 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.06.78 2.15 0 1.55-.01 2.8-.01 3.18 0 .32.21.68.8.56A10.52 10.52 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z"/></svg>
+  </a>
+  <a href="https://www.linkedin.com/in/roman-zeb" target="_blank" rel="noopener" title="LinkedIn">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM.5 8.98h8.96V23.5H.5V8.98ZM8.98 8.98h8.59v1.98h.12c.6-1.08 2.06-2.22 4.24-2.22 4.53 0 5.37 2.87 5.37 6.6v7.16h-8.96v-6.35c0-1.52-.03-3.47-2.12-3.47-2.12 0-2.45 1.65-2.45 3.36v6.46H8.98V8.98Z"/></svg>
+  </a>
+  <div class="side-line"></div>
+  <a href="mailto:romanzeb@proton.me" title="Mail">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 5.5h20v13H2v-13Z"/><path d="m2 6 10 7 10-7"/></svg>
+  </a>
+</div>
+
+<div class="wrap">
+  <header>
+    <div class="tag">FILE № 0x52 — ACTIVE</div>
+    <p id="site-desc">Siber güvenlik alanındaki öğrendiklerimi ve ilgimi çeken konuları paylaştığım kişisel bir platform.</p>
+    <nav>
+      <a href="#" class="active" onclick="showList(); return false;" id="nav-posts">EVIDENCE LOG</a>
+      <a href="#" onclick="showAbout(); return false;" id="nav-about">SUBJECT PROFILE</a>
+    </nav>
+  </header>
+
+  <main>
+    
+    <div id="post-list">
+    </div>
+    <div id="post-detail" class="post-body"></div>
+
+   
+    <div id="about" class="about-body">
+      <div class="status-line"><span class="status-dot"></span>SUBJECT ACTIVE · CLEARANCE: CYBER SECURITY</div>
+
+      <div class="dossier-block">
+        <div class="dossier-addr">0x00000000 <span class="label">IDENTITY</span></div>
+        <p>0x52 — Eski red team, şimdi blue team / SOC tarafında çalışan bir siber güvenlik meraklısı.</p>
+      </div>
+
+      <div class="dossier-block">
+        <div class="dossier-addr">0x00000040 <span class="label">BACKGROUND</span></div>
+        <p>Bilgisayar mühendisliği mezunuyum. Yolculuğum saldırı tarafında başladı — red team perspektifiyle sistemlerin nasıl kırıldığını, hangi zafiyetlerin gerçekten istismar edilebilir olduğunu öğrendim. Bu deneyim bana saldırganın nasıl düşündüğünü gösterdi.</p>
+        <p>Zamanla ilgim savunma tarafına kaydı: kırmak yerine, o kırılma anını yakalamak, durdurmak ve bir daha olmasını engellemek beni daha çok tatmin etmeye başladı. Bugün blue team / SOC tarafında çalışıyorum — ama red team geçmişim, tespit kuralları yazarken saldırganın bir sonraki hamlesini tahmin etmemi kolaylaştırıyor.</p>
+      </div>
+
+      <div class="dossier-block">
+        <div class="dossier-addr">0x00000080 <span class="label">EXPERTISE</span></div>
+        <div class="expertise-list">
+          <span style="color:#4ade80; border-color:#4ade80;">Threat Detection</span>
+          <span style="color:#f0a020; border-color:#f0a020;">Incident Response</span>
+          <span style="color:#3d8bd4; border-color:#3d8bd4;">SOC Operations</span>
+          <span style="color:#f0a020; border-color:#f0a020;">YARA Rule Development</span>
+          <span style="color:#a78bfa; border-color:#a78bfa;">MITRE ATT&CK</span>
+          <span style="color:#2dd4bf; border-color:#2dd4bf;">SIEM</span>
+          <span style="color:#e05a9c; border-color:#e05a9c;">Active Directory Security</span>
+          <span style="color:#eab308; border-color:#eab308;">Kerberos Attack Analysis</span>
+          <span style="color:#2dd4bf; border-color:#2dd4bf;">Network Forensics</span>
+          <span style="color:#4ade80; border-color:#4ade80;">Detection Engineering</span>
+          <span style="color:#e2483c; border-color:#e2483c;">Red Team Operations</span>
+          <span style="color:#e2483c; border-color:#e2483c;">Adversary Simulation</span>
+          <span style="color:#e2483c; border-color:#e2483c;">Penetration Testing</span>
+        </div>
+      </div>
+
+      <div class="dossier-block">
+        <div class="dossier-addr">0x000000C0 <span class="label">CONTACT</span></div>
+        <ul class="dossier-contact">
+          <li><span>Mail</span><a href="mailto:romanzeb@proton.me">romanzeb@proton.me</a></li>
+          <li><span>LinkedIn</span><a href="https://www.linkedin.com/in/roman-zeb" target="_blank" rel="noopener">linkedin.com/in/roman-zeb</a></li>
+          <li><span>GitHub</span><a href="https://github.com/Romanzeb" target="_blank" rel="noopener">github.com/Romanzeb</a></li>
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <span>© 2026 0x52 │ file remains open.</span>
+    <span>github.com/Romanzeb</span>
+  </footer>
+
+  <button id="back-to-top" onclick="window.scrollTo({top:0, behavior:'smooth'})" title="Yukarı çık">↑</button>
+</div>
+
+<script src="posts.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
